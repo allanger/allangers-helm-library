@@ -1,0 +1,26 @@
+name: Publish an oci artifact for the library
+
+on:
+  push:
+    branches:
+      - main
+env:
+  HELM_VERSION: v3.15.3
+jobs:
+  push:
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Push Helm chart to OCI compatible registry (Github)
+        uses: bsord/helm-push@4.2.0
+        with:
+          useOCIRegistry: true
+          registry-url: oci://ghcr.io/${{ github.repository }}
+          username: bsord
+          access-token: ${{ github.token }}
+          force: true
+          chart-folder: charts
