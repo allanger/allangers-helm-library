@@ -13,7 +13,7 @@
 {{- $data := dict -}}
 {{- range $key, $value := $v.data }} {{- /* range[1] */}}
 {{- if not (has $key ($v.remove)) }} {{- /* if[1] */}}
-{{- $_ := set $data $key (tpl $value $) }}
+{{- $_ := set $data $key (tpl (toString $value) $) }}
 {{- end }} {{- /* /if[1] */}}
 {{- end }} {{- /* /range[1] */}}
 {{- if $v.sensitive }} {{- /* if[1] */}}

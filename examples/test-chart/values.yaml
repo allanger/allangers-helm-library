@@ -96,6 +96,8 @@ env:
       DATA_FOLDER: '{{ .Values.shortcuts.dataFolder }}'
       LOG_FILE: '{{ .Values.shortcuts.logsFolder }}/vaultwarden.log'
       ROCKET_PORT: '{{ .Values.shortcuts.rocketPort }}'
+      BOOL: true
+      INT: 123
   secrets:
     enabled: true
     sensitive: true
