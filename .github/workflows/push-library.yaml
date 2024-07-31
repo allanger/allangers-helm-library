@@ -23,7 +23,7 @@ jobs:
           for chart in $(find charts -maxdepth 1 -mindepth 1 -type d); do
             helm package $chart -d chart-packages;
           done
-          charts=$($(find chart-packages -maxdepth 1 -mindepth 1 -type f))
+          charts=$(find chart-packages -maxdepth 1 -mindepth 1 -type f)
           for chart in $charts; do
             helm push $chart oci://ghcr.io/${{ github.repository }}
           done
