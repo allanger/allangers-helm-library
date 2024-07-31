@@ -184,7 +184,7 @@ ports:
 {{- if ne $k "raw" }}
 {{- $containerPort := index (index (index $.Context.Values.service $k).ports $v) "targetPort" -}}
 {{- $protocol := index (index (index $.Context.Values.service $k).ports $v) "protocol" }}
-  - containerPort: {{ atoi $containerPort }}
+  - containerPort: {{ $containerPort }}
     protocol: {{ $protocol }}
 {{- else }}
 {{ $v | toYaml | indent 2 -}}
