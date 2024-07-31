@@ -17,6 +17,7 @@
 {{- end }} {{- /* /if[1] */}}
 {{- end }} {{- /* /range[1] */}}
 {{- if $v.sensitive }} {{- /* if[1] */}}
+{{ include "lib.core.secret" (dict "Context" $ "metadata" $metadata "data" $data) }}
 {{- else }}
 {{ include "lib.core.configmap" (dict "Context" $ "metadata" $metadata "data" $data) }}
 {{- end -}} {{- /* /if[1] */}}

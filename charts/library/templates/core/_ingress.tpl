@@ -11,10 +11,10 @@ spec:
   ingressClassName: {{ .spec.class }}
   {{- with .spec.rules }}
   rules:
-    {{- tpl ( $.spec | toYaml | nindent 4 | toString) $.Context }}
+    {{- tpl ( $.spec.rules | toYaml | nindent 4 | toString) $.Context }}
   {{- end }}
   {{- with .spec.tls }}
   tls:
-    {{- tpl ( $.spec | toYaml | nindent 4 | toString) $.Context }}
+    {{- tpl ( $.spec.tls | toYaml | nindent 4 | toString) $.Context }}
   {{- end }}
 {{- end }}
