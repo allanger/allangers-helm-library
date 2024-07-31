@@ -2,8 +2,8 @@
 	* Metadata should accept a dict 
 */}}
 {{- define "lib.helpers.metadata" -}} {{- /* define[0] */ -}}
-{{- if .customname -}} {{- /* if[0] */ -}}
-name: {{ .customname }}
+{{- if .customName -}} {{- /* if[0] */ -}}
+name: {{ .customName }}
 {{- else -}}
 name: {{ include "chart.fullname" .Context }}
 {{- end }} {{- /* /if[0] */}}
