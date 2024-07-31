@@ -239,10 +239,9 @@ envFrom:
 {{- end -}} {{- /* /if[2]*/}}
 {{- /* Otherwise try to add references directly (if Secrets/ConfigMaps are not managed by the chart) */ -}}
 {{- else -}}
-{{- range $k, $v := $k }} {{- /* range[0] */}}
-  - {{ $k }}:
-{{ toYaml $v | indent 14 }}
-{{- end -}} {{- /* /range[0] */ -}}
+{{- $ref := list -}}
+{{- $ref = append $ref $k }}
+{{ printf "%s" (toYaml $ref) | indent 2}}
 {{- end -}} {{- /* /if[1] */ -}}
 {{- end -}} {{- /* /range[0] */ -}}
 {{- end -}} {{- /* /if[0] */ -}}

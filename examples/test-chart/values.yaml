@@ -34,6 +34,8 @@ workload:
       envFrom:
         - main
         - secrets
+        - configMap:
+            test: name
       livenessProbe:
         exec:
           command:
