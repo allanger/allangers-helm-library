@@ -28,9 +28,11 @@ volumes:
   {{- /* If storage is defined, mount a pvc */ -}}
   {{- if .ctx.Values.storage }} {{- /* if[1] */}}
     {{- range $k, $v := .ctx.Values.storage }} {{- /* range[0] */}}
+    {{- if $v.enabled }}
   - name: {{ $k }}-storage
     persistentVolumeClaim:
       claimName: "{{ printf "%s-%s" (include "chart.fullname" $.ctx) $k }}"
+    {{- end }}
     {{- end }} {{- /* /range[0] */}}
   {{- end  }} {{- /* /if[1] */}}
   {{- if .ctx.Values.extraVolumes}} {{- /* if[1] */}}

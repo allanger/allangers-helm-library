@@ -83,6 +83,12 @@ storage:
     size: 1Gi
     accessModes:
       - ReadWriteMany
+  logs:
+    enabled: false
+    storageClassName: default
+    size: 1Gi
+    accessModes:
+      - ReadWriteMany
 
 env:
   main:
