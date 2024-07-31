@@ -16,8 +16,7 @@ replicas: {{ .ctx.Values.workload.replicas | default 1 }}
 selector:
   matchLabels:
     {{- include "lib.helpers.selectorLabels" .ctx | nindent 6 }}
-template:
-  {{- include "lib.core.deployment.template" (dict "ctx" .ctx) | nindent 2 }}
+{{ include "lib.core.deployment.template" (dict "ctx" .ctx) }}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.deployment.template" -}} {{- /* define[0] */ -}}
