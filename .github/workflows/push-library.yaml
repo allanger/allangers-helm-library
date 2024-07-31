@@ -16,11 +16,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Push Helm chart to OCI compatible registry (Github)
-        uses: bsord/helm-push@4.1.0
-        with:
-          useOCIRegistry: true
-          registry-url: oci://ghcr.io/${{ github.repository }}
-          username: bsord
-          access-token: ${{ github.token }}
-          force: true
-          chart-folder: charts
+        run: |
+          helm registry login $REGISTRY_URL \
+            --username ${{ github.actor }} \
+            --password ${{ github.token }}
+          for chart in $(find charts -maxdepth 1 -mindepth 1 -type d); do
+            helm package $chart -d chart-packages;
+          done
+          charts=$($(find chart-packages -maxdepth 1 -mindepth 1 -type f))
+          for chart in $charts; do
+            helm push $chart oci://ghcr.io/${{ github.repository }}
+          done
