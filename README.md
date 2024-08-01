@@ -12,6 +12,7 @@
 	Hooks: 
 		- Pods
 		- Jobs
+        - * (tests)
 	Configuration:
 		- ConfigMaps
 		- Secrets

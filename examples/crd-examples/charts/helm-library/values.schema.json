@@ -1,0 +1,18 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "global": {
+      "description": "Global values are values that can be accessed from any chart or subchart by exactly the same name.",
+      "title": "global",
+      "type": "object"
+    },
+    "test": {
+      "default": "test",
+      "description": "helm-docs description here",
+      "title": "test",
+      "type": "string"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object"
+}

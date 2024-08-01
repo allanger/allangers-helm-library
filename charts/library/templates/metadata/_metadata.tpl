@@ -32,25 +32,12 @@ annotations:
 */}}
 {{- define "lib.metadata.mergeLabels" -}} {{- /* /define[0] */ -}}
 {{- include "lib.error.noCtx" . -}}
-{{- include "lib.core.metadata.labels" (dict "ctx" .ctx) }}
+{{- with .global -}} {{- /* /if[1] */ -}}
+{{ toYaml . }}
+{{- end }} {{- /* /if[1] */}}
+{{ with .local -}} {{- /* /if[1] */ -}}
+{{ toYaml . }}
+{{- end }} {{- /* /if[1] */}}
+{{ include "lib.chart.labels" (dict "ctx" .ctx) }}
 {{- end -}} {{- /* /define[0] */ -}}
 
-{{/*
-	* Common labels
-*/}}
-{{- define "lib.core.metadata.labels" -}}
-helm.sh/chart: {{ include "chart.chart" .ctx }}
-{{ include "lib.helpers.selectorLabels"  }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-	* Selector labels
-*/}}
-{{- define "lib.helpers.metadata.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "chart.name" .ctx }}
-app.kubernetes.io/instance: {{ .ctx.Release.Name }}
-{{- end }}
