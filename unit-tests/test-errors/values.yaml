@@ -1,0 +1,13 @@
+# ---------------------------------------------------------------------
+# A set of tests to be executed should be define via values
+# ---------------------------------------------------------------------
+---
+fail:
+  ctx1: false
+  ctx2: false
+  ctx3: false
+  ctx4: false
+  ctx5: false
+  ctx6: false
+pass:
+  ctx1: false

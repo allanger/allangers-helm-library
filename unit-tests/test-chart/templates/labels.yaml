@@ -1,0 +1,4 @@
+labels: 
+{{ include "lib.chart.labels" (dict "ctx" $) | indent 2 }}
+selectorLabels: 
+{{ include "lib.chart.selectorLabels" (dict "ctx" $) | indent 2 }}

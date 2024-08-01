@@ -1,0 +1,29 @@
+suite: Validate labels creation
+templates:
+  - labels.yaml
+tests:
+  - it: Labels should be generated correctly
+    asserts:
+      - equal:
+          path: labels["helm.sh/chart"]
+          value: test-chart-0.1.0
+      - equal:
+          path: labels["app.kubernetes.io/version"]
+          value: 1.16.0
+      - equal:
+          path: labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: labels["app.kubernetes.io/name"]
+          value: test-chart
+      - equal:
+          path: labels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+  - it: Selector labels should be generated correctly
+    asserts:
+      - equal:
+          path: labels["app.kubernetes.io/name"]
+          value: test-chart
+      - equal:
+          path: labels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
