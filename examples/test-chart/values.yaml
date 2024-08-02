@@ -12,6 +12,11 @@ workload:
     type: RollingUpdate
   containers:
     vaultwarden:
+      command: 
+        - test
+      args: 
+        - test
+        - lala
       image:
         registry: registry.hub.docker.com
         repository: vaultwarden/server

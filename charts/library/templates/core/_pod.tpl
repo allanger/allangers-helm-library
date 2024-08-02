@@ -85,10 +85,10 @@ containers:
     (dict "Chart" .Context.Chart "Image" .ContainerData.image) 
     | indent 2 
   -}}
-{{- 
-  include "lib.core.pod.container.command" .ContainerData | indent 2 
--}}
-{{- include "lib.core.pod.container.args" .ContainerData | indent 2 -}} 
+  {{-
+    include "lib.core.pod.container.command" .ContainerData | nindent 2 
+  -}}
+{{ include "lib.core.pod.container.args" .ContainerData | nindent 2 -}} 
 {{-
   include "lib.core.pod.container.ports" 
     (dict "Context" .Context "Container" .ContainerData) 
@@ -166,13 +166,13 @@ imagePullPolicy: {{ .Image.pullPolicy | default "Always" }}
 {{- with .command -}} {{- /* with[0] */ -}}
 command:
 {{ . | toYaml | indent 2 }}
-{{- end -}} {{- /* /with[0] */ -}}
+{{- end }} {{- /* /with[0] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.args" -}} {{- /* define[0] */ -}}
 {{- with .args }} {{- /* with[0] */ -}}
 args: 
-{{- . | toYaml | indent 2 }}
+{{ . | toYaml | indent 2 }}
 {{- end -}} {{- /* /with[0] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
