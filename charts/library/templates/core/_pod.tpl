@@ -72,6 +72,14 @@ containers:
 {{- end -}} {{- /* define[0] */ -}}
 
 {{- define "lib.core.pod.initContainers" -}} {{- /* define[0] */ -}}
+initContainers:
+{{- range $k, $v := .Values.workload.initContainers }} {{- /* range[0] */}}
+{{ 
+  include "lib.core.pod.container" 
+  (dict "Context" $ "ContainerName" $k "ContainerData" $v) 
+  | indent 2
+}}
+{{- end }} {{- /* /range[0] */}}
 {{- end -}} {{- /* define[0] */ -}}
 
 {{- define "lib.core.pod.container" -}} {{- /* define[0] */ -}}
