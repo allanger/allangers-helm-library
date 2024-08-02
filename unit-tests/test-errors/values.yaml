@@ -9,5 +9,9 @@ fail:
   ctx4: false
   ctx5: false
   ctx6: false
+  key1: false
+  key2: false
+  key3: false
 pass:
   ctx1: false
+  key1: false

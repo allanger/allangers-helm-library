@@ -3,22 +3,23 @@
 	* dict should contain the following keys:
 	* 	- ctx
 	* 	- name (optional)
-	*   - labels (optional)
+	*   - labels
 	*		- annotations (optional)
 */}}
 {{- define "lib.metadata" -}} {{- /* define[0] */ -}}
 {{- include "lib.error.noCtx" . -}}
-{{- if .name -}} {{- /* if[0] */ -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "labels") -}}
+{{- if .name -}} {{- /* if[1] */ -}}
 name: {{ .name }}
 {{- else -}}
 name: {{ include "chart.fullname" .ctx }}
-{{- end }} {{- /* /if[0] */}}
+{{- end }} {{- /* /if[1] */}}
 labels:
-	{{- include "lib.helpers.labels" .ctx | nindent 2 }}
-{{- if .annotations }} {{- /* if[0] */}}
+{{ .labels | indent 2 }}
+{{- if .annotations }} {{- /* if[1] */}}
 annotations:
 	{{- .annotations | toYaml | nindent 2 }}
-{{- end }} {{- /* /if[0] */}}
+{{- end }} {{- /* /if[1] */}}
 {{- end }} {{- /* /define[0] */ -}}
 
 {{/*
