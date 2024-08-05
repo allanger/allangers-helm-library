@@ -14,7 +14,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
+      - uses: azure/setup-helm@v4.2.0
+      - name: Run unit tests
+        run: make unit
       - name: Push Helm chart to OCI compatible registry (Github)
         run: |
           helm registry login ghcr.io \
