@@ -3,18 +3,31 @@
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.component.workload" -}} {{- /* define[0] */ -}}
-{{- 
-	$metadata := include "lib.helpers.metadata" 
-	(dict "Context" $ "annotations" .Values.workload.annotations) 
+{{- include "lib.err.noCtx" . -}}
+{{
+	$labels := include "lib.metadata.mergeLabels"
+	(dict
+		"ctx" .ctx
+		"global" .ctx.Values.metadata.labels
+		"local" .ctx.Values.base.workload.labels
+	)
 }}
-{{- if eq .Values.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
-{{- if contains .Values.workload.kind (include "lib.component.workload.allowed" .) }}{{- /* if[0] */ -}}
+{{- 
+	$metadata := include "lib.metadata" 
+	(dict 
+		"ctx" .ctx 
+		"annotations" .Values.base.workload.annotations
+		"labels" $labels
+	) 
+}}
+{{- if eq .Values.base.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
+{{- if contains .Values.base.workload.kind (include "lib.component.workload.allowed" .) }}{{- /* if[0] */ -}}
 {{- 
 	include "lib.core.deployment" 
 	(dict "ctx" . "metadata" $metadata) 
 }} 
 {{- else -}}
-{{- fail (printf "workload kind is not allowed: %s" .Values.workload.kind) -}}
+{{- fail (printf "workload kind is not allowed: %s" .Values.base.workload.kind) -}}
 {{- end }}{{- /* if[1] */ -}}
 {{- end -}} {{- /* /if[0]*/ -}}
 {{- end -}}{{- /* /define[0] */ -}}

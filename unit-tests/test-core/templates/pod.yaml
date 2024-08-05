@@ -1,0 +1,27 @@
+readinessProbe: 
+{{- 
+	include "lib.core.pod.container.readinessProbe" 
+	(dict
+		"ctx" .
+		"probe" .Values.readinessProbe
+	)
+	| indent 2
+}}
+livenessProbe: 
+{{- 
+	include "lib.core.pod.container.livenessProbe" 
+	(dict
+		"ctx" .
+		"probe" .Values.livenessProbe
+	)
+	| indent 2
+}}
+startupProbe: 
+{{- 
+	include "lib.core.pod.container.startupProbe" 
+	(dict
+		"ctx" .
+		"probe" .Values.startupProbe
+	)
+	| indent 2
+}}

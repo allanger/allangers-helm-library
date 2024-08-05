@@ -249,24 +249,37 @@ envFrom:
 {{- end -}} {{- /* /if[0] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
-{{- /* Probes */ -}}
-{{- define "lib.core.pod.container.readinessProbe" -}} {{- /* (define) */ -}}
-{{- if .readinessProbe }} {{- /* (1) */}}
+{{/* 
+  * Probes 
+*/}}
+
+{{- define "lib.core.pod.container.readinessProbe" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
+{{- if .probe }} {{- /* if[1] */}}
+{{- $probe := tpl (toYaml .probe) .ctx }}
 readinessProbe:
-{{ .readinessProbe | toYaml | indent 2 }}
-{{- end }} {{- /* /(0) */}}
-{{- end -}} {{- /* /(define) */ -}}
+{{ $probe | indent 2}}
+{{ end }} {{/* /if[1] */}}
+{{- end -}} {{- /* /define[0] */ -}}
 
-{{- define "lib.core.pod.container.livenessProbe" -}} {{- /* (define) */ -}}
-{{- if .livenessProbe }} {{- /* (1) */}}
+{{- define "lib.core.pod.container.livenessProbe" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
+{{- if .probe }} {{- /* if[1] */}}
+{{- $probe := tpl (toYaml .probe) .ctx }}
 livenessProbe:
-{{ .livenessProbe | toYaml | indent 2 }}
-{{- end }} {{- /* /(0) */}}
-{{- end -}} {{- /* /(define) */ -}}
+{{ $probe | indent 2}}
+{{ end }} {{/* /if[1] */}}
+{{- end -}} {{- /* /define[0] */ -}}
 
-{{- define "lib.core.pod.container.startupProbe" -}} {{- /* (define) */ -}}
-{{- if .startupProbe }} {{- /* (1) */}}
+{{- define "lib.core.pod.container.startupProbe" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
+{{- if .probe }} {{- /* if[1] */}}
+{{- $probe := tpl (toYaml .probe) .ctx }}
 startupProbe:
-{{ .startupProbe | toYaml | indent 2 }}
-{{- end }} {{- /* /(0) */}}
-{{- end -}} {{- /* /(define) */ -}}
+{{ $probe | indent 2}}
+{{ end }} {{/* /if[1] */}}
+{{- end -}} {{- /* /define[0] */ -}}
+
