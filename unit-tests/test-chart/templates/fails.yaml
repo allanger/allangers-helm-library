@@ -1,5 +1,5 @@
-{{- if (.Values.fail).release -}}
-release: {{ include "lib.chart.release" (dict "Context" $) }}
+{{- if (.Values.fail).name -}}
+name: {{ include "lib.chart.name" (dict "Context" $) }}
 {{- end -}}
 {{- if (.Values.fail).chart -}}
 chart: {{ include "lib.chart.chart" . }}

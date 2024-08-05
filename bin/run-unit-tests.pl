@@ -9,7 +9,7 @@ foreach my $test (<./unit-tests/*>) {
         or die "Couldn't build dependencies for $test";
     system("helm dependency update $test") == 0
         or die "Couldn't update dependencies for $test";
-    push(@failed, $case) if system("helm unittest $test -f $case") != 0;
+    push(@failed, "$test/$case") if system("helm unittest $test -f $case") != 0;
   }
 }
 

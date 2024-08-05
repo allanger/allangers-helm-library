@@ -1,9 +1,9 @@
 templates:
   - fails.yaml
 tests:
-  - it: Release should fail
+  - it: name should fail
     set:
-      fail.release: true
+      fail.name: true
     asserts:
       - failedTemplate:
           errorMessage: no context provided

@@ -21,7 +21,7 @@ tests:
           value: RELEASE-NAME
   - it: Labels should be generated correctly (local)
     values:
-      - ./values/local.yaml
+      - ./labels-values/local.yaml
     asserts:
       - equal:
           path: mergedLabels["helm.sh/chart"]
@@ -47,7 +47,7 @@ tests:
 
   - it: Labels should be generated correctly (global)
     values:
-      - ./values/global.yaml
+      - ./labels-values/global.yaml
     asserts:
       - equal:
           path: mergedLabels["helm.sh/chart"]
@@ -73,7 +73,7 @@ tests:
   
   - it: Labels should be generated correctly (both)
     values:
-      - ./values/both.yaml
+      - ./labels-values/both.yaml
     asserts:
       - equal:
           path: mergedLabels["helm.sh/chart"]

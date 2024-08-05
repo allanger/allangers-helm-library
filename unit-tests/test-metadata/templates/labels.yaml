@@ -1,5 +1,5 @@
 mergedLabels: 
-{{ 
+{{- 
 	include "lib.metadata.mergeLabels" 
 	(dict 
 		"ctx" $ 

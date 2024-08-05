@@ -1,0 +1,23 @@
+metadata: 
+{{ if .Values.metadata.withAnnotations }}
+{{
+	include "lib.metadata" 
+	(dict 
+	"ctx" .
+	"name" .Values.metadata.customName
+	"labels" .Values.metadata.labels
+	"annotations" .Values.metadata.annotations
+	) 
+	| indent 2 
+}}
+{{ else }}
+{{ 
+	include "lib.metadata" 
+	(dict 
+	"ctx" . 
+	"name" .Values.metadata.customName
+	"labels" .Values.metadata.labels
+	) 
+	| indent 2 
+}}
+{{ end }}

@@ -1,4 +1,14 @@
-test:
-  - test
-  - test
-lala: lala
+# -- Base is the base layer of the an application. Mostly it shouldn't be edited.
+base:
+  # -- Only one workload entry is allowed per release
+  # -- workload is either Deployment/DaemonSet/StatefulSet/CronJob
+  workload:
+    # -- Deployment/DaemonSet/StatefulSet/CronJob
+    kind: Deployment
+    # -- Metadata to be added to a workload object
+    metadata: {}
+    strategy:
+      type: RollingUpdate
+    volumes: {}
+    containers: {}
+  
