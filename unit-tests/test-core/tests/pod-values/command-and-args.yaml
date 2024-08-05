@@ -1,0 +1,5 @@
+command:
+  - sh
+args:
+  - -c
+  - echo test

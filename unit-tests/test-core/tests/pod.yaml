@@ -80,3 +80,27 @@ tests:
                 port: "8080"
                 initialDelaySeconds: 15
                 periodSeconds: 10
+  - it: Validate command and args (empty)
+    asserts:
+      - equal:
+          path: command
+          value: null
+      - equal:
+          path: args
+          value: null
+  
+  - it: Validate command and args
+    values:
+      - ./pod-values/command-and-args.yaml
+    asserts:
+      - equal:
+          path: command
+          value: 
+            command:
+              - sh
+      - equal:
+          path: args
+          value:
+            args:
+              - -c
+              - echo test

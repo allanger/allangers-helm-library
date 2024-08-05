@@ -25,3 +25,19 @@ startupProbe:
 	)
 	| indent 2
 }}
+command:
+{{- 
+	include "lib.core.pod.container.command" 
+	(dict
+		"command" .Values.command
+	)
+	| indent 2
+}}	
+args:
+{{- 
+	include "lib.core.pod.container.args" 
+	(dict
+		"args" .Values.args
+	)
+	| indent 2
+}}

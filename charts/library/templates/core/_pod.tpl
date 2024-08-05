@@ -162,18 +162,24 @@ imagePullPolicy: {{ .Image.pullPolicy | default "Always" }}
 {{- end -}} {{/* /if[0] */}}
 {{- end -}} {{/* /define[0] */}}
 
+{{/* 
+  * Command and Args are accepting a dict as an argument
+	* dict should contain the following keys:
+	* 	- ctx
+	* 	- command/args (optional list) - When empty, entry is not added
+*/}}
 {{- define "lib.core.pod.container.command" -}} {{- /* define[0] */ -}}
-{{- with .command -}} {{- /* with[0] */ -}}
+{{- with .command }} {{- /* with[1] */}}
 command:
 {{ . | toYaml | indent 2 }}
-{{- end -}} {{- /* /with[0] */ -}}
+{{- end -}} {{- /* /with[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.args" -}} {{- /* define[0] */ -}}
-{{- with .args }} {{- /* with[0] */ -}}
+{{- with .args }} {{- /* with[1] */}}
 args: 
-{{- . | toYaml | indent 2 }}
-{{- end -}} {{- /* /with[0] */ -}}
+{{ . | toYaml | indent 2 }}
+{{- end -}} {{- /* /with[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.ports" -}} {{- /* define[0] */ -}}
@@ -250,7 +256,14 @@ envFrom:
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{/* 
-  * Probes 
+  * Probes are accepting a dict as an argument
+	* dict should contain the following keys:
+	* 	- ctx
+	* 	- probe (optional) - When empty, probe is not added
+  *
+  * Notes: Probes can be tempalted, because some kinds of probes
+  * need to be aware of a port to be checking against. And to avoid
+  * copypaste all the probes are tempalted
 */}}
 
 {{- define "lib.core.pod.container.readinessProbe" -}} {{- /* define[0] */ -}}
