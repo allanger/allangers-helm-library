@@ -104,3 +104,26 @@ tests:
             args:
               - -c
               - echo test
+  - it: Validate default image tag
+    set: 
+      image.tag: test
+    asserts:
+      - equal:
+          path: imageTagDefault1
+          value: 1.16.0 
+      - equal:
+          path: imageTagDefault2
+          value: 1.16.0
+      - equal:
+          path: imageTagCustom1
+          value: test
+      - equal:
+          path: imageTagCustom2
+          value: test
+
+  - it: Validate fail of image tag builder
+    set: 
+      fail.imageTag: true
+    asserts:
+      - failedTemplate:
+          errorMessage: .tag or .appVersion must be passed to this helper

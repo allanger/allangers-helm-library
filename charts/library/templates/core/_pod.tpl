@@ -137,24 +137,24 @@ securityContext:
 {{- end -}} {{- /* /if[0] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
-{{- define "lib.core.pod.container.tag" -}} {{/* define[0] */}}
-{{- if or .Tag .AppVersion -}} {{/* if[0] */}}
-  {{- if .Tag -}} {{/* if[1] */}}
-    {{- .Tag -}} 
+{{- define "lib.core.pod.container.image.tag" -}} {{/* define[0] */}}
+{{- if or .tag .appVersion -}} {{/* if[1] */}}
+  {{- if .tag -}} {{/* if[2] */}}
+    {{- .tag -}} 
   {{- else -}}
-    {{- .AppVersion  -}}
-  {{- end -}} {{/* /if[1] */}}
+    {{- .appVersion  -}}
+  {{- end -}} {{/* /if[2] */}}
 {{- else -}}
-  {{ fail ".Tag or .AppVersion must be passed to this helper (helper.workload.tag)"}}
-{{- end -}} {{/* /if[0] */}}
+  {{ fail ".tag or .appVersion must be passed to this helper"}}
+{{- end -}} {{/* /if[1] */}}
 {{- end -}} {{/* /define[0] */}}
 
 {{- define "lib.core.pod.container.image" -}} {{/* define[0] */}}
 {{- if and .Chart .Image -}} {{/* if[0] */}}
 image: {{ printf "%s/%s:%s" 
   .Image.registry .Image.repository 
-  (include "lib.core.pod.container.tag" 
-  (dict "AppVersion" $.Chart.AppVersion "Tag" .Image.tag)) 
+  (include "lib.core.pod.container.image.tag"
+  (dict "appVersion" $.Chart.AppVersion "tag" .Image.tag)) 
 }}
 imagePullPolicy: {{ .Image.pullPolicy | default "Always" }}
 {{- else -}}
@@ -181,6 +181,48 @@ args:
 {{ . | toYaml | indent 2 }}
 {{- end -}} {{- /* /with[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
+
+{{/* 
+  * Probes are accepting a dict as an argument
+	* dict should contain the following keys:
+	* 	- ctx
+	* 	- probe (optional) - When empty, probe is not added
+  *
+  * Notes: Probes can be tempalted, because some kinds of probes
+  * need to be aware of a port to be checking against. And to avoid
+  * copypaste all the probes are tempalted
+*/}}
+
+{{- define "lib.core.pod.container.readinessProbe" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
+{{- if .probe }} {{- /* if[1] */}}
+{{- $probe := tpl (toYaml .probe) .ctx }}
+readinessProbe:
+{{ $probe | indent 2}}
+{{ end }} {{/* /if[1] */}}
+{{- end -}} {{- /* /define[0] */ -}}
+
+{{- define "lib.core.pod.container.livenessProbe" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
+{{- if .probe }} {{- /* if[1] */}}
+{{- $probe := tpl (toYaml .probe) .ctx }}
+livenessProbe:
+{{ $probe | indent 2}}
+{{ end }} {{/* /if[1] */}}
+{{- end -}} {{- /* /define[0] */ -}}
+
+{{- define "lib.core.pod.container.startupProbe" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
+{{- if .probe }} {{- /* if[1] */}}
+{{- $probe := tpl (toYaml .probe) .ctx }}
+startupProbe:
+{{ $probe | indent 2}}
+{{ end }} {{/* /if[1] */}}
+{{- end -}} {{- /* /define[0] */ -}}
+
 
 {{- define "lib.core.pod.container.ports" -}} {{- /* define[0] */ -}}
 {{- if .Container.ports }} {{- /* if[0] */}}
@@ -253,46 +295,5 @@ envFrom:
 {{- end -}} {{- /* /if[1] */ -}}
 {{- end -}} {{- /* /range[0] */ -}}
 {{- end -}} {{- /* /if[0] */ -}}
-{{- end -}} {{- /* /define[0] */ -}}
-
-{{/* 
-  * Probes are accepting a dict as an argument
-	* dict should contain the following keys:
-	* 	- ctx
-	* 	- probe (optional) - When empty, probe is not added
-  *
-  * Notes: Probes can be tempalted, because some kinds of probes
-  * need to be aware of a port to be checking against. And to avoid
-  * copypaste all the probes are tempalted
-*/}}
-
-{{- define "lib.core.pod.container.readinessProbe" -}} {{- /* define[0] */ -}}
-{{- include "lib.error.noCtx" . -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
-{{- if .probe }} {{- /* if[1] */}}
-{{- $probe := tpl (toYaml .probe) .ctx }}
-readinessProbe:
-{{ $probe | indent 2}}
-{{ end }} {{/* /if[1] */}}
-{{- end -}} {{- /* /define[0] */ -}}
-
-{{- define "lib.core.pod.container.livenessProbe" -}} {{- /* define[0] */ -}}
-{{- include "lib.error.noCtx" . -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
-{{- if .probe }} {{- /* if[1] */}}
-{{- $probe := tpl (toYaml .probe) .ctx }}
-livenessProbe:
-{{ $probe | indent 2}}
-{{ end }} {{/* /if[1] */}}
-{{- end -}} {{- /* /define[0] */ -}}
-
-{{- define "lib.core.pod.container.startupProbe" -}} {{- /* define[0] */ -}}
-{{- include "lib.error.noCtx" . -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
-{{- if .probe }} {{- /* if[1] */}}
-{{- $probe := tpl (toYaml .probe) .ctx }}
-startupProbe:
-{{ $probe | indent 2}}
-{{ end }} {{/* /if[1] */}}
 {{- end -}} {{- /* /define[0] */ -}}
 

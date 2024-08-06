@@ -1,1 +1,6 @@
 ---
+# -- Pod tests
+image:
+  tag: default
+fail:
+  imageTag: false

@@ -41,3 +41,12 @@ args:
 	)
 	| indent 2
 }}
+
+imageTagDefault1: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion "tag" "") }}
+imageTagDefault2: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion) }}
+imageTagCustom1: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion "tag" .Values.image.tag) }}
+imageTagCustom2: {{ include "lib.core.pod.container.image.tag" (dict "tag" .Values.image.tag) }}
+
+{{- if .Values.fail.imageTag -}}
+imageTagFail: {{ include "lib.core.pod.container.image.tag" . }}
+{{- end -}}
