@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+use File::Temp qw/ tempfile tempdir /;
+$dir = tempdir( CLEANUP => 1 );
+$ENV{HELM_REPOSITORY_CACHE} = $dir;
+$ENV{HELM_CACHE_HOME} = $dir;
 my @failed;
 foreach my $test (<./unit-tests/*>) {
   print $test . "\n";

@@ -107,6 +107,7 @@ tests:
   - it: Validate default image tag
     set: 
       image.tag: test
+      pass.onlyTag: true
     asserts:
       - equal:
           path: imageTagDefault1
@@ -127,3 +128,28 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: .tag or .appVersion must be passed to this helper
+
+  - it: Validate the image object
+    asserts:
+      - equal:
+          path: image["image"]
+          value: reg.company/test:1.16.0
+      - equal:
+          path: image["imagePullPolicy"]
+          value: Always
+  
+  - it: Validate the image object
+    set:
+      image.registry: custom.company
+      image.repository: custom
+      image.tag: test
+      image.pullPolicy: IfNotPresent
+    asserts:
+      - equal:
+          path: image["image"]
+          value: custom.company/custom:test
+      - equal:
+          path: image["imagePullPolicy"]
+          value: IfNotPresent
+
+

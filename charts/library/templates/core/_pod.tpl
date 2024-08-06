@@ -82,7 +82,7 @@ containers:
   -}}
   {{- 
     include "lib.core.pod.container.image" 
-    (dict "Chart" .Context.Chart "Image" .ContainerData.image) 
+    (dict "chart" .Context.Chart "image" .ContainerData.image) 
     | indent 2 
   -}}
 {{- 
@@ -150,16 +150,16 @@ securityContext:
 {{- end -}} {{/* /define[0] */}}
 
 {{- define "lib.core.pod.container.image" -}} {{/* define[0] */}}
-{{- if and .Chart .Image -}} {{/* if[0] */}}
+{{- if and .chart .image -}} {{/* if[1] */}}
 image: {{ printf "%s/%s:%s" 
-  .Image.registry .Image.repository 
+  .image.registry .image.repository 
   (include "lib.core.pod.container.image.tag"
-  (dict "appVersion" $.Chart.AppVersion "tag" .Image.tag)) 
+  (dict "appVersion" .chart.AppVersion "tag" .image.tag))
 }}
-imagePullPolicy: {{ .Image.pullPolicy | default "Always" }}
+imagePullPolicy: {{ .image.pullPolicy | default "Always" }}
 {{- else -}}
-  {{ fail ".Chart and .Image must be passed to this helper (helper.workload.image)"}}
-{{- end -}} {{/* /if[0] */}}
+  {{ fail ".chart and .image must be passed to this helper (helper.workload.image)"}}
+{{- end -}} {{/* /if[1] */}}
 {{- end -}} {{/* /define[0] */}}
 
 {{/* 

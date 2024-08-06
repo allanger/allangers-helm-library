@@ -1,6 +1,11 @@
 ---
 # -- Pod tests
 image:
-  tag: default
+  tag:
+  registry: reg.company
+  repository: test
+  pullPolicy:
+pass:
+  tagOnly: false
 fail:
   imageTag: false
