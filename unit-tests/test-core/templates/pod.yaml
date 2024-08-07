@@ -1,45 +1,45 @@
 readinessProbe: 
-{{- 
-	include "lib.core.pod.container.readinessProbe" 
-	(dict
-		"ctx" .
-		"probe" .Values.readinessProbe
-	)
-	| indent 2
+{{ 
+  include "lib.core.pod.container.readinessProbe" 
+  (dict
+    "ctx" .
+    "probe" .Values.readinessProbe
+  )
+  | indent 2
 }}
-livenessProbe: 
-{{- 
-	include "lib.core.pod.container.livenessProbe" 
-	(dict
-		"ctx" .
-		"probe" .Values.livenessProbe
-	)
-	| indent 2
+livenessProbe:
+{{
+  include "lib.core.pod.container.livenessProbe" 
+  (dict
+    "ctx" .
+    "probe" .Values.livenessProbe
+  )
+  | indent 2
 }}
 startupProbe: 
-{{- 
-	include "lib.core.pod.container.startupProbe" 
-	(dict
-		"ctx" .
-		"probe" .Values.startupProbe
-	)
-	| indent 2
+{{
+  include "lib.core.pod.container.startupProbe" 
+  (dict
+    "ctx" .
+    "probe" .Values.startupProbe
+  )
+  | indent 2
 }}
 command:
-{{- 
-	include "lib.core.pod.container.command" 
-	(dict
-		"command" .Values.command
-	)
-	| indent 2
-}}	
+{{
+  include "lib.core.pod.container.command" 
+  (dict
+    "command" .Values.command
+  )
+  | indent 2
+}}  
 args:
-{{- 
-	include "lib.core.pod.container.args" 
-	(dict
-		"args" .Values.args
-	)
-	| indent 2
+{{
+  include "lib.core.pod.container.args" 
+  (dict
+    "args" .Values.args
+  )
+  | indent 2
 }}
 
 imageTagDefault1: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion "tag" "") }}
@@ -56,10 +56,19 @@ imageTagFail: {{ include "lib.core.pod.container.image.tag" . }}
 
 image:
 {{-
-	include "lib.core.pod.container.image"
-	(dict
-		"chart" .Chart
-		"image" .Values.image
-	)
-	| indent 2
+  include "lib.core.pod.container.image"
+  (dict
+    "chart" .Chart
+    "image" .Values.image
+  )
+  | indent 2
+}}
+
+podSecurityContext:
+{{
+  include "lib.core.pod.securityContext"
+  (dict
+    "securityContext" .Values.pod.podSecurityContext
+  )
+  | indent 2
 }}

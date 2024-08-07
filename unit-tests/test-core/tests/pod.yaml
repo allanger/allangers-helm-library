@@ -151,5 +151,29 @@ tests:
       - equal:
           path: image["imagePullPolicy"]
           value: IfNotPresent
-
-
+  
+  - it: Validate the default pod security context
+    asserts:
+      - equal:
+          path: podSecurityContext
+          value:
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 3000
+              fsGroup: 2000
+              seccompProfile:
+                type: RuntimeDefault
+  
+  
+  - it: Validate the default pod security context
+    values:
+      - ./pod-values/custom-security-context.yaml
+    asserts:
+      - equal:
+          path: podSecurityContext
+          value:
+            securityContext:
+              seLinuxOptions:
+                level: "s0:c123,c456"
+  
+  

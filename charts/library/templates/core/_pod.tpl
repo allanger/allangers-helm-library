@@ -4,7 +4,7 @@
 
 {{- define "lib.core.pod.securityContext" -}} {{- /* define[0] */ -}}
 securityContext:
-{{- if not .ctx.Values.workload.securityContext }} {{- /* if[0] */}}
+{{- if not .securityContext }} {{- /* if[1] */}}
 # ---------------------------------------------------------------------
 # Using the default security context, if it doesn't work for you,
 # please update `.Values.workload.securityContext`
@@ -15,10 +15,10 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 {{- else -}}
-{{- with .ctx.Values.workload.securityContext -}} {{- /* with[0] */ -}}
+{{- with .securityContext }} {{- /* with[2] */}}
 {{ toYaml . | indent 2 }}
-{{- end -}} {{- /* /with[0] */}}
-{{- end -}} {{- /* /if[0] */ -}}
+{{- end -}} {{- /* /with[2] */}}
+{{- end -}} {{- /* /if[1] */ -}}
 {{- end -}} {{- /* define[0] */ -}}
 
 
@@ -168,15 +168,16 @@ imagePullPolicy: {{ .image.pullPolicy | default "Always" }}
 	* 	- ctx
 	* 	- command/args (optional list) - When empty, entry is not added
 */}}
+
 {{- define "lib.core.pod.container.command" -}} {{- /* define[0] */ -}}
-{{- with .command }} {{- /* with[1] */}}
+{{- with .command -}} {{- /* with[1] */ -}}
 command:
 {{ . | toYaml | indent 2 }}
 {{- end -}} {{- /* /with[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.args" -}} {{- /* define[0] */ -}}
-{{- with .args }} {{- /* with[1] */}}
+{{- with .args -}} {{- /* with[1] */ -}}
 args: 
 {{ . | toYaml | indent 2 }}
 {{- end -}} {{- /* /with[1] */ -}}
@@ -197,7 +198,7 @@ args:
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
 {{- if .probe }} {{- /* if[1] */}}
-{{- $probe := tpl (toYaml .probe) .ctx }}
+{{- $probe := tpl (toYaml .probe) .ctx -}}
 readinessProbe:
 {{ $probe | indent 2}}
 {{ end }} {{/* /if[1] */}}
@@ -207,7 +208,7 @@ readinessProbe:
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
 {{- if .probe }} {{- /* if[1] */}}
-{{- $probe := tpl (toYaml .probe) .ctx }}
+{{- $probe := tpl (toYaml .probe) .ctx -}}
 livenessProbe:
 {{ $probe | indent 2}}
 {{ end }} {{/* /if[1] */}}
@@ -217,7 +218,7 @@ livenessProbe:
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "probe") -}}
 {{- if .probe }} {{- /* if[1] */}}
-{{- $probe := tpl (toYaml .probe) .ctx }}
+{{- $probe := tpl (toYaml .probe) .ctx -}}
 startupProbe:
 {{ $probe | indent 2}}
 {{ end }} {{/* /if[1] */}}

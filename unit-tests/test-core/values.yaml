@@ -9,3 +9,6 @@ pass:
   tagOnly: false
 fail:
   imageTag: false
+
+pod:
+  podSecurityContext: {}
