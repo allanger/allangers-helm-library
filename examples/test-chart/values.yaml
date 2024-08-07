@@ -10,5 +10,25 @@ base:
     strategy:
       type: RollingUpdate
     volumes: {}
-    containers: {}
-  
+    containers:
+      vaultwarden:
+        envFrom:
+          main:
+            remove: []
+          secrets:
+            remove: []
+          raw:
+            
+
+configs:
+  env:
+    main:
+      sensitive: false
+      data:
+        USERNAME: test
+    secrets:
+      sensitive: true
+      data:
+        PASSWORD: test
+
+ 
