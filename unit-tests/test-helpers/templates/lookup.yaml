@@ -1,0 +1,20 @@
+lookupEnv:
+{{ 
+	include "lib.helpers.lookup.env"
+	(dict
+		"ctx" .
+		"key" "test"
+	)
+	| indent 2
+}}
+
+{{- if .Values.tests.lookup.fail  -}}
+{{ 
+	include "lib.helpers.lookup.env"
+	(dict
+		"ctx" .
+		"key" "notset"
+	)
+	| indent 2
+}}
+{{- end }}

@@ -72,3 +72,6 @@ podSecurityContext:
   )
   | indent 2
 }}
+
+envFrom:
+{{ include "lib.core.pod.container.envFrom" (dict "ctx" . "envFrom" .Values.workload.containers.test.envFrom) }}

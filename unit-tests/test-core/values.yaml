@@ -12,3 +12,18 @@ fail:
 
 pod:
   podSecurityContext: {}
+
+workload:
+  containers:
+    test:
+      envFrom:
+        test: {}
+
+config:
+  env:
+    test:
+      sensitive: false
+      data:
+        TEST: test
+
+

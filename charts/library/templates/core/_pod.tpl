@@ -273,28 +273,35 @@ volumeMounts:
 {{- end }} {{- /* /if[0] */}}
 {{- end -}} {{- /* /define[0] */ -}}
 
-{{- define "lib.core.pod.container.envFrom" -}} {{- /* define[0] */ -}}
-{{- /* If env should be set from a Configmap/Secret */ -}}
-{{- if .Container.envFrom }} {{- /* if[0] */}}
-envFrom:
-{{- range $k := .Container.envFrom -}} {{- /* range[0] */ -}}
-{{/* If envFrom entry is a string, then refer to the env created by the library */}}
-{{- if kindIs "string" $k -}} {{- /* if[1] */ -}}
-{{- if (index $.Context.Values.env $k) -}} {{- /* if[2] */ -}}
-{{- if (index $.Context.Values.env $k).sensitive }} {{- /* if[3] */}}
-  - secretRef:
-{{- else }}
-  - configMapRef:
-{{- end }} {{- /* /if[3] */}}
-      name: {{- printf " %s-%s" (include "chart.fullname" $.Context) $k -}}
-{{- end -}} {{- /* /if[2]*/}}
-{{- /* Otherwise try to add references directly (if Secrets/ConfigMaps are not managed by the chart) */ -}}
-{{- else -}}
-{{- $ref := list -}}
-{{- $ref = append $ref $k }}
-{{ printf "%s" (toYaml $ref) | indent 2}}
-{{- end -}} {{- /* /if[1] */ -}}
-{{- end -}} {{- /* /range[0] */ -}}
-{{- end -}} {{- /* /if[0] */ -}}
-{{- end -}} {{- /* /define[0] */ -}}
 
+{{/*
+  * EnvFrom can either take values from predefined env values
+  * or add a raw envFrom entries to the manifests
+  * When using the predefined env, it's possible to remove entries
+  * using the '.remove' entry from the env mountpoint
+  * 
+  * Should accept a dict with the followibg keys
+  * ctx
+  * envFrom
+  * 
+*/}}
+{{- define "lib.core.pod.container.envFrom" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "envFrom") -}}
+{{- /* If env should be set from a Configmap/Secret */ -}}
+{{- if .envFrom }} {{- /* if[1] */}}
+envFrom:
+{{- range $k, $v := .envFrom }} {{- /* range[2] */}}
+{{- if not (eq $k "raw") }} {{- /* if[3] */}}
+{{- $source := include "lib.helpers.lookup.env" (dict "ctx" $.ctx "key" $k) | fromYaml }}
+{{- if $source.sensitive }}
+  - secretRef
+{{- else }}
+  - configMap
+{{- end }}
+      name: {{ include "lib.component.env.name" (dict "ctx" $.ctx "name" $k) }}
+{{- end }} {{- /* if[3] */}}
+{{- end }} {{- /* /range[2] */}}
+
+{{- end -}} {{- /* /if[1] */ -}}
+{{- end -}} {{- /* /define[0] */ -}}

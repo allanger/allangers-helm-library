@@ -24,3 +24,9 @@
 {{- end }} {{- /* /if[0] */}}
 {{- end }} {{- /* /range[0] */}}
 {{- end -}} {{- /* /define[0] */ -}}
+
+{{- define "lib.component.env.name" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "name") -}}
+{{ printf "%s-%s-env" .ctx.Release.Name .name }}
+{{- end -}} {{- /* /define[0] */ -}}

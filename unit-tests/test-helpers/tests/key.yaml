@@ -1,6 +1,6 @@
 suite: Test context errors
 templates:
-  - key.yaml
+  - errors/key.yaml
 tests:
   - it: Should throw error (missing 1)
     set: 
