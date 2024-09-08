@@ -17,10 +17,10 @@ name: {{ .name }}
 name: {{ include "lib.chart.name" (dict "ctx" .ctx) }}
 {{- end }} {{- /* /if[1] */}}
 labels:
-{{ .labels | toYaml | indent 2 }}
+{{ .labels | indent 2 }}
 {{- if .annotations }} {{- /* if[1] */}}
 annotations:
-	{{- .annotations | toYaml | nindent 2 }}
+{{ toYaml .annotations | indent 2 }}
 {{- end }} {{- /* /if[1] */}}
 {{- end }} {{- /* /define[0] */ -}}
 
@@ -34,13 +34,13 @@ annotations:
 	*                       the current resource
 */}}
 {{- define "lib.metadata.mergeLabels" -}} {{- /* /define[0] */ -}}
-{{- include "lib.error.noCtx" . }}
-{{- with .global }} {{- /* /if[1] */}}
-{{ toYaml . }}
-{{- end -}} {{- /* /if[1] */}}
-{{- with .local }} {{- /* /if[1] */}}
-{{ toYaml . }}
-{{- end }} {{- /* /if[1] */}}
+{{- include "lib.error.noCtx" . -}}
 {{ include "lib.chart.labels" (dict "ctx" .ctx) }}
+{{- range $key, $val := .global }} {{- /* /range[1] */}}
+{{ $key }}: {{ $val | quote }}
+{{- end }} {{- /* /range[1] */}}
+{{- range $key, $val := .local }} {{- /* /range[1] */}}
+{{ $key }}: {{ $val | quote }}
+{{- end }} {{- /* /range[1] */}}
 {{- end -}} {{- /* /define[0] */ -}}
 

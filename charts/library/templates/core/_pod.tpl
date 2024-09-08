@@ -2,12 +2,19 @@
 {{- fail "pods are not implemented net" -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
+{{/* 
+  * This function should accept a seucrityContext
+  * from values, so please use it with values
+  * directly
+  * SecurityContext is not templated, so it will be 
+  * added as is
+*/}}
 {{- define "lib.core.pod.securityContext" -}} {{- /* define[0] */ -}}
 securityContext:
 {{- if not .securityContext }} {{- /* if[1] */}}
 # ---------------------------------------------------------------------
 # Using the default security context, if it doesn't work for you,
-# please update `.Values.workload.securityContext`
+# please update `.Values.base.workload.securityContext`
 # ---------------------------------------------------------------------
   runAsUser: 1000
   runAsGroup: 3000
@@ -57,8 +64,15 @@ volumes:
 {{- end -}} {{- /* /if[0] */ -}}
 {{- end -}} {{- /* define[0] */ -}}
 
+{{/*
+  * This template should generate a valid container
+  * defintion that should be used by both
+  * containers and initContainers
+*/}}
 {{- define "lib.core.pod.containers" -}} {{- /* define[0] */ -}}
-{{- if not .Values.workload.containers -}} {{- /* if[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "container") -}}
+{{- if not .ctx.Values.workload.containers -}} {{- /* if[0] */ -}}
 {{ fail ".Values.workload.containers can't be empty" }}
 {{- end -}} {{- /* /if[0] */ -}}
 containers:
@@ -289,15 +303,15 @@ volumeMounts:
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "envFrom") -}}
 {{- /* If env should be set from a Configmap/Secret */ -}}
-{{- if .envFrom }} {{- /* if[1] */}}
+{{- if .envFrom -}} {{- /* if[1] */ -}}
 envFrom:
-{{- range $k, $v := .envFrom }} {{- /* range[2] */}}
-{{- if not (eq $k "raw") }} {{- /* if[3] */}}
+{{- range $k, $v := .envFrom -}} {{- /* range[2] */ -}}
+{{- if not (eq $k "raw") -}} {{- /* if[3] */ -}}
 {{- $source := include "lib.helpers.lookup.env" (dict "ctx" $.ctx "key" $k) | fromYaml }}
 {{- if $source.sensitive }}
-  - secretRef
+  - secretRef:
 {{- else }}
-  - configMap
+  - configMap:
 {{- end }}
       name: {{ include "lib.component.env.name" (dict "ctx" $.ctx "name" $k) }}
 {{- end }} {{- /* if[3] */}}

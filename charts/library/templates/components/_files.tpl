@@ -4,11 +4,24 @@
 */}}
 {{- define "lib.component.files" -}} {{- /* define[0] */ -}}
 {{- range $k, $v := .Values.files }} {{- /* range[0] */}}
-{{- $customName := printf "%s-%s" (include "chart.fullname" $) $k }}
+{{- $customName := printf "%s-file-%s" (include "chart.fullname" $) $k }}
 {{- if $v.enabled }} {{- /* if[0] */}}
+{{-
+	$labels := include "lib.metadata.mergeLabels"
+	(dict
+		"ctx" $.ctx
+		"global" $.ctx.Values.metadata.labels
+		"local" ($v.metadata).labels
+	)
+}}
 {{- 
-	$metadata := include "lib.helpers.metadata" 
-	(dict "Context" $ "customName" $customName "annotations" $v.annotations) 
+	$metadata := include "lib.metadata" 
+	(dict 
+		"ctx" $.ctx 
+		"name" $customName 
+		"annotations" $v.annotations
+		"labels" $labels
+	) 
 }}
 {{- $entries := dict -}}
 {{- range $key, $value := $v.entries }} {{- /* range[1] */}}

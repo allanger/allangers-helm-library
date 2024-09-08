@@ -1,33 +1,44 @@
 {{- define "lib.component.workload.allowed" -}} {{- /* define[0] */ -}}
-{{ index .Chart.Annotations "allowed_workload_kinds" }}
+{{- include "lib.error.noCtx" . -}}
+{{ index .ctx.Chart.Annotations "allowed_workload_kinds" }}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.component.workload" -}} {{- /* define[0] */ -}}
-{{- include "lib.err.noCtx" . -}}
-{{
+{{- include "lib.error.noCtx" . -}}
+{{-
 	$labels := include "lib.metadata.mergeLabels"
 	(dict
 		"ctx" .ctx
 		"global" .ctx.Values.metadata.labels
-		"local" .ctx.Values.base.workload.labels
+		"local" .ctx.Values.base.workload.metadata.labels
 	)
 }}
 {{- 
 	$metadata := include "lib.metadata" 
 	(dict 
 		"ctx" .ctx 
-		"annotations" .Values.base.workload.annotations
+		"annotations" .ctx.Values.base.workload.metadata.annotations
 		"labels" $labels
 	) 
 }}
-{{- if eq .Values.base.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
-{{- if contains .Values.base.workload.kind (include "lib.component.workload.allowed" .) }}{{- /* if[0] */ -}}
+{{-
+	$securityContext := include "lib.core.pod.securityContext"
+	(dict
+		"securityContext" .ctx.Values.base.workload.securityContext
+	)
+}}
+{{- if eq .ctx.Values.base.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
+{{- if contains .ctx.Values.base.workload.kind (include "lib.component.workload.allowed" (dict "ctx" .ctx)) }}{{- /* if[0] */ -}}
 {{- 
 	include "lib.core.deployment" 
-	(dict "ctx" . "metadata" $metadata) 
+	(dict 
+		"ctx" .ctx 
+		"metadata" $metadata
+		"securityContext" $securityContext
+	) 
 }} 
 {{- else -}}
-{{- fail (printf "workload kind is not allowed: %s" .Values.base.workload.kind) -}}
+{{- fail (printf "workload kind is not allowed: %s" .ctx.Values.base.workload.kind) -}}
 {{- end }}{{- /* if[1] */ -}}
 {{- end -}} {{- /* /if[0]*/ -}}
 {{- end -}}{{- /* /define[0] */ -}}

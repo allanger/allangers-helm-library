@@ -165,7 +165,7 @@ tests:
                 type: RuntimeDefault
   
   
-  - it: Validate the default pod security context
+  - it: Validate a custom pod security context
     values:
       - ./pod-values/custom-security-context.yaml
     asserts:

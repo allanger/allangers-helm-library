@@ -1,11 +1,12 @@
 metadata: 
-{{ if .Values.metadata.withAnnotations }}
+{{- $labels := toYaml .Values.metadata.labels -}}
+{{- if .Values.metadata.withAnnotations }}
 {{
 	include "lib.metadata" 
 	(dict 
 	"ctx" .
 	"name" .Values.metadata.customName
-	"labels" .Values.metadata.labels
+	"labels" $labels
 	"annotations" .Values.metadata.annotations
 	) 
 	| indent 2 
@@ -16,7 +17,7 @@ metadata:
 	(dict 
 	"ctx" . 
 	"name" .Values.metadata.customName
-	"labels" .Values.metadata.labels
+	"labels" $labels
 	) 
 	| indent 2 
 }}

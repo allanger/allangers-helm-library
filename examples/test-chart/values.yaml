@@ -1,17 +1,34 @@
 # -- Base is the base layer of the an application. Mostly it shouldn't be edited.
+# -- Only one workload entry is allowed per release
+# -- workload is either Deployment/DaemonSet/StatefulSet/CronJob
+metadata:
+  annotations:
+    test1: global
 base:
-  # -- Only one workload entry is allowed per release
-  # -- workload is either Deployment/DaemonSet/StatefulSet/CronJob
   workload:
+    replicas: 1
     # -- Deployment/DaemonSet/StatefulSet/CronJob
     kind: Deployment
     # -- Metadata to be added to a workload object
-    metadata: {}
+    metadata:
+      annotations:
+        test: local
     strategy:
       type: RollingUpdate
+    securityContext:
+      seLinuxOptions:
+        level: s0:c123,c456
+
+
     volumes: {}
     containers:
       vaultwarden:
+        image:
+          registry: registry.hub.docker.com
+          repository: stalwartlabs/mail-server
+          tag:
+          pullPolicy: Always
+
         envFrom:
           main:
             remove: []
@@ -20,15 +37,23 @@ base:
           raw:
             
 
-configs:
+config:
   env:
     main:
+      enabled: true
       sensitive: false
       data:
         USERNAME: test
     secrets:
+      enabled: false
       sensitive: true
       data:
         PASSWORD: test
-
- 
+  files:
+    main:
+      enabled: true
+      sensitive: false
+      entries: 
+        file.txt:
+          data: test
+      
