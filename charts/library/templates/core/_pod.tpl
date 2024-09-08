@@ -92,7 +92,7 @@ initContainers:
     include "lib.core.pod.container.image" 
     (dict "Chart" .Context.Chart "Image" .ContainerData.image) 
     | indent 2 
-  -}}
+  }}
   restartPolicy: {{ .ContainerData.restartPolicy | default "always" }}
   {{-
     include "lib.core.pod.container.command" .ContainerData | nindent 2 
