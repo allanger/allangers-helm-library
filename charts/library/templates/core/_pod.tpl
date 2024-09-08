@@ -65,7 +65,7 @@ containers:
 {{- range $k, $v := .Values.workload.containers }} {{- /* range[0] */}}
 {{ 
   include "lib.core.pod.container" 
-  (dict "Context" $ "ContainerName" $k "ContainerData" $v) 
+  (dict "Context" $ "ContainerName" $k "ContainerData" $v "init" false) 
   | indent 2
 }}
 {{- end }} {{- /* /range[0] */}}
@@ -76,7 +76,7 @@ initContainers:
 {{- range $k, $v := .Values.workload.initContainers }} {{- /* range[0] */}}
 {{ 
   include "lib.core.pod.container" 
-  (dict "Context" $ "ContainerName" $k "ContainerData" $v) 
+  (dict "Context" $ "ContainerName" $k "ContainerData" $v "init" true) 
   | indent 2
 }}
 {{- end }} {{- /* /range[0] */}}
@@ -93,7 +93,9 @@ initContainers:
     (dict "Chart" .Context.Chart "Image" .ContainerData.image) 
     | indent 2 
   }}
+  {{- if .init }}
   restartPolicy: {{ .ContainerData.restartPolicy | default "Always" }}
+  {{- end }}
   {{-
     include "lib.core.pod.container.command" .ContainerData | nindent 2 
   -}}
