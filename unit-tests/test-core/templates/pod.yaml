@@ -82,3 +82,11 @@ envFrom:
   ) 
   | indent 2
 }}
+
+containers: 
+{{
+  include "lib.core.pod.container"
+  (dict
+    "ctx" .
+  )
+}}

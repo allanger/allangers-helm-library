@@ -69,17 +69,15 @@ volumes:
   * defintion that should be used by both
   * containers and initContainers
 */}}
+
 {{- define "lib.core.pod.containers" -}} {{- /* define[0] */ -}}
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "container") -}}
-{{- if not .ctx.Values.workload.containers -}} {{- /* if[0] */ -}}
-{{ fail ".Values.workload.containers can't be empty" }}
-{{- end -}} {{- /* /if[0] */ -}}
 containers:
 {{- range $k, $v := .Values.workload.containers }} {{- /* range[0] */}}
 {{ 
   include "lib.core.pod.container" 
-  (dict "Context" $ "ContainerName" $k "ContainerData" $v) 
+  (dict "Context" $ "name" $k "data" $v) 
   | indent 2
 }}
 {{- end }} {{- /* /range[0] */}}
@@ -88,16 +86,24 @@ containers:
 {{- define "lib.core.pod.initContainers" -}} {{- /* define[0] */ -}}
 {{- end -}} {{- /* define[0] */ -}}
 
+{{/*
+   * This template should be able to create a valid container spec
+*/}}
 {{- define "lib.core.pod.container" -}} {{- /* define[0] */ -}}
-- name: {{ .ContainerName }}
+- name: {{ .name }}
   {{- 
     include "lib.core.pod.container.securityContext" 
-    .ContainerData | nindent 2 
+    (dict 
+      "securityContext" .data.securityContext
+    ) | nindent 2 
   -}}
   {{- 
     include "lib.core.pod.container.image" 
-    (dict "chart" .Context.Chart "image" .ContainerData.image) 
-    | indent 2 
+    (dict 
+      "chart" .ctx.Chart 
+      "image" .data.image
+    ) 
+    | nindent 2 
   -}}
 {{- 
   include "lib.core.pod.container.command" .ContainerData | indent 2 

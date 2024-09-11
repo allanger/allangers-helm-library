@@ -25,7 +25,6 @@
 }}
 {{- end -}} {{- /* /range[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "containers") -}}
 
 {{- define "lib.helpers.hash" -}} {{- /* define[0] */ -}}
 {{ printf "helm.badhouseplants.net/%s-%s" .kind .name }}: {{ .data | toString | sha256sum }}
