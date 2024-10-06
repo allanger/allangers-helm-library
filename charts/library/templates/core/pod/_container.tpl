@@ -9,7 +9,7 @@ name: {{ .name }}
 {{ include "lib.core.pod.container.command" (dict "command" .data.command) }}
 {{ include "lib.core.pod.container.args" (dict "args" .data.command) }}
 {{ include "lib.core.pod.container.livenessProbe" (dict "ctx" .ctx "probe" .data.livenessProbe) }}
-{{ include "lib.core.pod.container.readinessProbe" (dict "ctx" .ctx"probe" .data.readinessProbe) }}
+{{ include "lib.core.pod.container.readinessProbe" (dict "ctx" .ctx "probe" .data.readinessProbe) }}
 {{- /*
   {{- 
     include "lib.core.pod.container.image" 
