@@ -12,9 +12,3 @@
 	)
 }}
 
-{{ 
-	include "lib.component.files" 
-	(dict	
-		"ctx" .
-	)
-}}

@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------
+# ** Container test **
+# ---------------------------------------------------------------------
+{{-
+  $command := include "lib.core.pod.container.command" 
+  (dict
+    "command" .Values.command
+  )
+}}  
+
+{{-
+  $args := include "lib.core.pod.container.args" 
+  (dict
+    "args" .Values.args
+  )
+}}  
+
+{{-
+  $securityContext := include "lib.core.pod.container.securityContext"
+  (dict
+    "securityContext" .Values.container.securityContext
+  )
+}}
+
+{{-
+  $readinessProbe := include "lib.core.pod.container.readinessProbe" 
+  (dict
+    "ctx" .
+    "probe" .Values.readinessProbe
+  )
+}}
+{{-
+  $livenessProbe :=  include "lib.core.pod.container.livenessProbe" 
+  (dict
+    "ctx" .
+    "probe" .Values.livenessProbe
+  )
+}}
+{{-
+  $startupProbe := include "lib.core.pod.container.startupProbe" 
+  (dict
+    "ctx" .
+    "probe" .Values.startupProbe
+  )
+}}
+
+container:
+{{
+  include "lib.core.pod.container"
+  (dict
+      "name" "test"
+      "securityContext" $securityContext
+      "command" $command
+      "args" $args
+      "startupProbe" $startupProbe
+      "livenessProbe" $livenessProbe
+      "readinessProbe" $readinessProbe
+  )
+  | indent 2
+}}

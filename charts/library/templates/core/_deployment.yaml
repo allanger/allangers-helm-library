@@ -21,6 +21,7 @@ spec:
     "ctx" .ctx
     "securityContext" .securityContext
     "metadata" .metadata
+    "containers" .containers
   ) 
   | indent 2 
 }}
@@ -40,7 +41,7 @@ selector:
     "ctx" .ctx
     "securityContext" .securityContext
     "metadata" .metadata
-    "container" .container
+    "containers" .containers
   ) 
 }}
 {{- end -}} {{- /* /define[0] */ -}}
@@ -50,7 +51,7 @@ selector:
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "securityContext") -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "metadata") -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "container") -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "containers") -}}
 {{- $labels := toYaml (index (fromYaml .metadata) "labels") -}}
 {{- $annotations := toYaml (index (fromYaml .metadata) "annotations") -}}
 template:
@@ -68,5 +69,5 @@ template:
     }}
   spec:
     {{- .securityContext | nindent 4 }}
-    {{- .container | nindent 4 }}
+    {{ .containers  | nindent 4 }}
 {{- end -}} {{- /* /define[0] */ -}}

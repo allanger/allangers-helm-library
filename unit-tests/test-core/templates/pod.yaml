@@ -1,3 +1,7 @@
+# ---------------------------------------------------------------------
+# ** Pod test **
+# ---------------------------------------------------------------------
+
 readinessProbe: 
 {{ 
   include "lib.core.pod.container.readinessProbe" 
@@ -83,10 +87,11 @@ envFrom:
   | indent 2
 }}
 
-containers: 
+containerSecurityContext: 
 {{
-  include "lib.core.pod.container"
+  include "lib.core.pod.container.securityContext"
   (dict
-    "ctx" .
+    "securityContext" .Values.container.securityContext
   )
+  | indent 2
 }}

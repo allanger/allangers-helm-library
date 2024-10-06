@@ -27,12 +27,15 @@
 		"securityContext" .ctx.Values.base.workload.securityContext
 	)
 }}
-{{-
+
+{{
 	$containers := include "lib.core.pod.containers"
 	(dict
-		"ctx" .ctx
+	"ctx" .ctx
+	"containers" .ctx.Values.base.workload.containers
 	)
 }}
+
 {{- if eq .ctx.Values.base.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
 {{- if contains .ctx.Values.base.workload.kind (include "lib.component.workload.allowed" (dict "ctx" .ctx)) }}{{- /* if[0] */ -}}
 {{- 
@@ -41,7 +44,7 @@
 		"ctx" .ctx 
 		"metadata" $metadata
 		"securityContext" $securityContext
-		"container" $.ctx.Values.vase.workload.container
+		"containers" $containers
 	) 
 }} 
 {{- else -}}

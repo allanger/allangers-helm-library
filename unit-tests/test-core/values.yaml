@@ -13,6 +13,9 @@ fail:
 pod:
   podSecurityContext: {}
 
+container:
+  securityContext: {}
+
 workload:
   containers:
     test:

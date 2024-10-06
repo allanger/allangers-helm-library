@@ -35,6 +35,17 @@ base:
           secrets:
             remove: []
           raw:
+        command:
+          - sh
+        args:
+          - test
+      test:
+        image:
+          registry: registry.hub.docker.com
+          repository: stalwartlabs/mail-server
+          tag:
+          pullPolicy: Always
+
             
 
 config:

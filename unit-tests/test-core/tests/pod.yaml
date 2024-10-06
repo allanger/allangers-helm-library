@@ -176,3 +176,25 @@ tests:
               seLinuxOptions:
                 level: "s0:c123,c456"
   
+  - it: Validate the default container security context
+    asserts:
+      - equal:
+          path: containerSecurityContext
+          value:
+            securityContext:
+              runAsUser: 2000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+  
+  - it: Validate a custom container security context
+    values:
+      - ./pod-values/custom-security-context.yaml
+    asserts:
+      - equal:
+          path: containerSecurityContext
+          value:
+            securityContext:
+              seLinuxOptions:
+                level: "s0:c123,c456"
