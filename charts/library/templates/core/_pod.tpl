@@ -73,18 +73,23 @@ volumes:
 {{- define "lib.core.pod.containers" -}} {{- /* define[0] */ -}}
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "containers") -}}
+{{- $ctx := .ctx }}
 containers:
 {{- $containers := list }}
-{{- range $k, $v := .containers }} {{- /* range[0] */}}
-{{- $container := include "lib.core.pod.container" 
+{{- range $k, $v := .containers }} {{- /* range[1] */}}
+{{- $containerRaw := include "lib.core.pod.container" 
     (dict 
-      "ctx" $
+      "ctx" $ctx
       "name" $k 
       "data" $v
-    ) | fromYaml
+    )
 }}
+{{- $container := fromYaml $containerRaw }}
+{{- if hasKey $container "Error" }} {{- /* if[2] */}}
+{{- fail (printf "%s\n%v" $container $containerRaw) }}
+{{- end }} {{- /* /if[1] */}}
 {{- $containers = append $containers $container }}
-{{- end }} {{- /* /range[0] */}}
+{{- end }} {{- /* /range[1] */}}
 {{ $containers | toYaml | indent 2 }}
 {{- end -}} {{- /* define[0] */ -}}
 
@@ -103,98 +108,4 @@ containers:
 {{- end -}} {{/* /if[1] */}}
 {{- end -}} {{/* /define[0] */}}
 
-{{- define "lib.core.pod.container.image" -}} {{/* define[0] */}}
-{{- if and .chart .image -}} {{/* if[1] */}}
-image: {{ printf "%s/%s:%s" 
-  .image.registry .image.repository 
-  (include "lib.core.pod.container.image.tag"
-  (dict "appVersion" .chart.AppVersion "tag" .image.tag))
-}}
-imagePullPolicy: {{ .image.pullPolicy | default "Always" }}
-{{- else -}}
-  {{ fail ".chart and .image must be passed to this helper (helper.workload.image)"}}
-{{- end -}} {{/* /if[1] */}}
-{{- end -}} {{/* /define[0] */}}
 
-
-
-{{- define "lib.core.pod.container.ports" -}} {{- /* define[0] */ -}}
-{{- if .Container.ports }} {{- /* if[0] */}}
-ports:
-{{- range $k, $v := .Container.ports }} {{- /* range[0] */}}
-{{- if and (kindIs "string" $v) (eq $k "raw") }} {{- /* if[1] */}}
-{{- fail "raw port should be an array of ports" -}}
-{{- end }}
-{{- if ne $k "raw" }}
-{{- $containerPort := index (index (index $.Context.Values.service $k).ports $v) "targetPort" -}}
-{{- $protocol := index (index (index $.Context.Values.service $k).ports $v) "protocol" }}
-  - containerPort: {{ $containerPort }}
-    protocol: {{ $protocol }}
-{{- else }}
-{{ $v | toYaml | indent 2 -}}
-{{- end -}} {{- /* /if[1] */ -}}
-{{- end -}} {{- /* /range[0] */ -}}
-{{- end -}} {{- /* /if[1] */ -}}
-{{- end -}} {{- /* /define[0] */ -}}
-
-{{- define "lib.core.pod.container.volumeMounts" -}} {{- /* define[0] */ -}}
-{{- if .mounts }} {{- /* if[0] */}}
-volumeMounts:
-{{- range $mountKind, $mountData := .mounts }} {{- /* range[0] */}}
-{{- if eq $mountKind "storage" }} {{- /* if[1] */}}
-{{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
-  - name: {{ printf "%s-storage" $mountName }}
-    mountPath: {{ $mountEntry.path }} 
-{{- end }} {{- /* /range[1] */}}
-{{- end }} {{- /* /if[1] */}}
-{{- if eq $mountKind "files" }} {{- /* if[1] */}}
-{{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
-  - name: {{ printf "%s-file" $mountName }}
-    mountPath: {{ $mountEntry.path }} 
-{{- if $mountEntry.subPath }} {{- /* if[2] */}}
-    subPath: {{ $mountEntry.subPath }}
-{{- end }} {{- /* /if[2] */}}
-{{- end }} {{- /* /range[1] */}}
-{{- end }} {{- /* /if[1] */}}
-{{- if eq $mountKind "extraVolumes" }} {{- /* if[1] */}}
-{{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
-  - name: {{ printf "%s-extra" $mountName }}
-    mountPath: {{ $mountEntry.path }} 
-{{- end }} {{- /* /range[1] */}}
-{{- end }} {{- /* /if[1] */}}
-{{- end }} {{- /* /range[0] */}}
-{{- end }} {{- /* /if[0] */}}
-{{- end -}} {{- /* /define[0] */ -}}
-
-
-{{/*
-  * EnvFrom can either take values from predefined env values
-  * or add a raw envFrom entries to the manifests
-  * When using the predefined env, it's possible to remove entries
-  * using the '.remove' entry from the env mountpoint
-  * 
-  * Should accept a dict with the followibg keys
-  * ctx
-  * envFrom
-  * 
-*/}}
-{{- define "lib.core.pod.container.envFrom" -}} {{- /* define[0] */ -}}
-{{- include "lib.error.noCtx" . -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "envFrom") -}}
-{{- /* If env should be set from a Configmap/Secret */ -}}
-{{- if .envFrom -}} {{- /* if[1] */ -}}
-envFrom:
-{{- range $k, $v := .envFrom -}} {{- /* range[2] */ -}}
-{{- if not (eq $k "raw") -}} {{- /* if[3] */ -}}
-{{- $source := include "lib.helpers.lookup.env" (dict "ctx" $.ctx "key" $k) | fromYaml }}
-{{- if $source.sensitive }}
-  - secretRef:
-{{- else }}
-  - configMap:
-{{- end }}
-      name: {{ include "lib.component.env.name" (dict "ctx" $.ctx "name" $k) }}
-{{- end }} {{- /* if[3] */}}
-{{- end }} {{- /* /range[2] */}}
-
-{{- end -}} {{- /* /if[1] */ -}}
-{{- end -}} {{- /* /define[0] */ -}}

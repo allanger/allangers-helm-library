@@ -3,8 +3,9 @@
 	* of environment variables via configmaps and secrets
 */}}
 {{- define "lib.component.files" -}} {{- /* define[0] */ -}}
-{{- range $k, $v := .Values.files }} {{- /* range[0] */}}
-{{- $customName := printf "%s-file-%s" (include "chart.fullname" $) $k }}
+{{- include "lib.error.noCtx" . -}}
+{{- range $k, $v := .ctx.Values.config.files }} {{- /* range[0] */}}
+{{- $customName := include "lib.component.file.name" (dict "ctx" $.ctx "name" $k) }}
 {{- if $v.enabled }} {{- /* if[0] */}}
 {{-
 	$labels := include "lib.metadata.mergeLabels"
@@ -48,10 +49,16 @@
 {{- end }} {{- /* /if[1] */}}
 {{- end }} {{- /* /range[1] */}}
 {{- if $v.sensitive }} {{- /* if[1] */}}
-{{ include "lib.core.secret" (dict "Context" $ "metadata" $metadata "data" $entries) }}
+{{ include "lib.core.secret" (dict "ctx" $ "metadata" $metadata "data" $entries) }}
 {{- else }}
-{{ include "lib.core.configmap" (dict "Context" $ "metadata" $metadata "data" $entries) }}
+{{ include "lib.core.configmap" (dict "ctx" $ "metadata" $metadata "data" $entries) }}
 {{- end -}} {{- /* /if[1] */}}
 {{- end }} {{- /* /if[0] */}}
 {{- end }} {{- /* /range[0] */}}
+{{- end -}} {{- /* /define[0] */ -}}
+
+{{- define "lib.component.file.name" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "name") -}}
+{{ printf "%s-%s-file" .ctx.Release.Name .name }}
 {{- end -}} {{- /* /define[0] */ -}}

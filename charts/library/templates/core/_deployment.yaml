@@ -1,4 +1,5 @@
 {{/*
+          tag:
   * Bootstrap a deployment
   * It should always receive a dict as an argument
 */}}

@@ -23,12 +23,36 @@ base:
     volumes: {}
     containers:
       vaultwarden:
+        volumeMounts:
+          storage:
+            data: 
+              path: /tmp
+          files:
+            main:
+              path: /test
+        ports:
+          vaultwarden: 
+            - https
+            - http
+        livenessProbe:
+          tcpSocket:
+            port: 25
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          tcpSocket:
+            port: 25
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        startupProbe:
+          tcpSocket:
+            port: 25
+          initialDelaySeconds: 3
+          periodSeconds: 3
         image:
           registry: registry.hub.docker.com
           repository: stalwartlabs/mail-server
-          tag:
           pullPolicy: Always
-
         envFrom:
           main:
             remove: []
@@ -39,13 +63,28 @@ base:
           - sh
         args:
           - test
-      test:
-        image:
-          registry: registry.hub.docker.com
-          repository: stalwartlabs/mail-server
-          tag:
-          pullPolicy: Always
 
+services:
+  vaultwarden:
+    enabled: true
+    type: ClusterIP
+    ports:
+      https:
+        port: 443
+        targetPort: 443
+        protocol: TCP
+      http:
+        port: 80
+        targetPort: 80
+        protocol: TCP
+
+storage:
+  data:
+    enabled: true
+    storageClassName: default
+    size: 1Gi
+    accessModes:
+      - ReadWriteMany
             
 
 config:

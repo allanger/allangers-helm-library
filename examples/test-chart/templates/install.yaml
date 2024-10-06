@@ -12,3 +12,21 @@
 	)
 }}
 
+{{ 
+	include "lib.component.service" 
+	(dict	
+		"ctx" .
+	)
+}}
+
+{{ 
+	include "lib.component.files" 
+	(dict	
+		"ctx" .
+	)
+}}
+
+
+
+
+

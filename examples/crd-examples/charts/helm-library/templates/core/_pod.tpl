@@ -184,8 +184,8 @@ ports:
 {{- fail "raw port should be an array of ports" -}}
 {{- end }}
 {{- if ne $k "raw" }}
-{{- $containerPort := index (index (index $.Context.Values.service $k).ports $v) "targetPort" -}}
-{{- $protocol := index (index (index $.Context.Values.service $k).ports $v) "protocol" }}
+{{- $containerPort := index (index (index $.Context.Values.services $k).ports $v) "targetPort" -}}
+{{- $protocol := index (index (index $.Context.Values.services $k).ports $v) "protocol" }}
   - containerPort: {{ $containerPort }}
     protocol: {{ $protocol }}
 {{- else }}

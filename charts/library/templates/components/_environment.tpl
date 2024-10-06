@@ -5,13 +5,13 @@
 {{- define "lib.component.environment" -}} {{- /* define[0] */ -}}
 {{- include "lib.error.noCtx" . -}}
 {{- range $k, $v := .ctx.Values.config.env }} {{- /* range[0] */}}
-{{- $customName := printf "%s-env-%s" (include "lib.chart.fullname" $) $k }}
+{{- $customName := include "lib.component.env.name" (dict "ctx" $.ctx "name" $k) }}
 {{- if $v.enabled }} {{- /* if[0] */}}
 {{-
 	$labels := include "lib.metadata.mergeLabels"
 	(dict
 		"ctx" $.ctx
-		"global" $.ctx.Values.metadata.labels
+		"global" ($.ctx.Values.metadata).labels
 		"local" ($v.metadata).labels
 	)
 }}
@@ -20,7 +20,7 @@
 	(dict 
 		"ctx" $.ctx 
 		"name" $customName 
-		"annotations" $v.annotations
+		"annotations" ($v.metadata).annotations
 		"labels" $labels
 	) 
 }}

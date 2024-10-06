@@ -10,7 +10,7 @@ metadata:
 spec:
   type: {{ .spec.type }}
   selector:
-{{ include "lib.helpers.selectorLabels" .ctx  | indent 4}}
+  {{- include "lib.chart.selectorLabels" (dict "ctx" .ctx) | nindent 4 }}
   ports:
 {{- range $k,$v := .spec.ports }} {{- /* range[0] */}}
     - name: {{ $k }}
