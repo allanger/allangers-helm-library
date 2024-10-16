@@ -15,7 +15,7 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
 {{- else -}}
-{{- with .ctx.Values.workload.securityContext -}} {{- /* with[0] */ -}}
+{{- with .ctx.Values.workload.securityContext }} {{- /* with[0] */}}
 {{ toYaml . | indent 2 }}
 {{- end -}} {{- /* /with[0] */}}
 {{- end -}} {{- /* /if[0] */ -}}

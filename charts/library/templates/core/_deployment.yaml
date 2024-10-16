@@ -27,7 +27,7 @@ template:
     annotations:
 {{ include "lib.helpers.hashes" (dict "env" .ctx.Values.env "files" .ctx.Values.files) | indent 6 }}
   spec:
-    {{- include "lib.core.pod.securityContext" (dict "ctx" .ctx) | nindent 4 -}}
+    {{- include "lib.core.pod.securityContext" (dict "ctx" .ctx) | nindent 4 }}
     {{- include "lib.core.pod.volumes" (dict "ctx" .ctx) | nindent 4 }}
     {{- include "lib.core.pod.containers" .ctx | nindent 4 }}
     {{- include "lib.core.pod.initContainers" .ctx | nindent 4 }}
