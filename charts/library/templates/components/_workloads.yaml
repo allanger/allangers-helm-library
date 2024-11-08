@@ -36,6 +36,16 @@
 	)
 }}
 
+{{
+	$volumes := include "lib.core.pod.volumes"
+	(dict
+		"ctx" .ctx
+		"files" (.ctx.Values.config).files
+		"storage" .ctx.Values.storage
+		"extraVolumes" .ctx.Values.extraVolumes
+	)
+}}
+
 {{- if eq .ctx.Values.base.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
 {{- if contains .ctx.Values.base.workload.kind (include "lib.component.workload.allowed" (dict "ctx" .ctx)) }}{{- /* if[0] */ -}}
 {{- 
@@ -45,6 +55,7 @@
 		"metadata" $metadata
 		"securityContext" $securityContext
 		"containers" $containers
+		"volumes" $volumes
 	) 
 }} 
 {{- else -}}

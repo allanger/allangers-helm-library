@@ -1,5 +1,4 @@
 {{/*
-          tag:
   * Bootstrap a deployment
   * It should always receive a dict as an argument
 */}}
@@ -23,6 +22,7 @@ spec:
     "securityContext" .securityContext
     "metadata" .metadata
     "containers" .containers
+    "volumes" .volumes
   ) 
   | indent 2 
 }}
@@ -43,6 +43,7 @@ selector:
     "securityContext" .securityContext
     "metadata" .metadata
     "containers" .containers
+    "volumes" .volumes
   ) 
 }}
 {{- end -}} {{- /* /define[0] */ -}}
@@ -71,4 +72,5 @@ template:
   spec:
     {{- .securityContext | nindent 4 }}
     {{ .containers  | nindent 4 }}
+    {{ .volumes | nindent 4 }}
 {{- end -}} {{- /* /define[0] */ -}}

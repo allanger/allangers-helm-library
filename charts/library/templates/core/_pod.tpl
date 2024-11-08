@@ -30,34 +30,40 @@ securityContext:
 
 
 {{- define "lib.core.pod.volumes" -}} {{- /* define[0] */ -}}
-{{- if or ( or .ctx.Values.storage .ctx.Values.extraVolumes) .ctx.Values.files -}} {{- /* if[0]*/ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "storage") -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "files") -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "extraVolumes") -}}
+{{- if or (or .storage .files) .extraVolumes -}} {{- /* if[0]*/ -}}
 volumes:
   {{- /* If storage is defined, mount a pvc */ -}}
-  {{- if .ctx.Values.storage }} {{- /* if[1] */}}
-    {{- range $k, $v := .ctx.Values.storage }} {{- /* range[0] */}}
+  {{- if .storage }} {{- /* if[1] */}}
+    {{- range $k, $v := .storage }} {{- /* range[0] */}}
     {{- if $v.enabled }}
+    {{- $name := include "lib.component.storage.name" (dict "ctx" $.ctx "name" $k) }}
   - name: {{ $k }}-storage
     persistentVolumeClaim:
-      claimName: "{{ printf "%s-%s" (include "chart.fullname" $.ctx) $k }}"
+      claimName: {{ $name }}
     {{- end }}
     {{- end }} {{- /* /range[0] */}}
   {{- end  }} {{- /* /if[1] */}}
-  {{- if .ctx.Values.extraVolumes}} {{- /* if[1] */}}
-    {{- range $k, $v := .ctx.Values.extraVolumes}} {{- /* range[0] */}}
+  {{- if .extraVolumes}} {{- /* if[1] */}}
+    {{- range $k, $v := .extraVolumes}} {{- /* range[0] */}}
   - name: {{ $k }}-extra
     {{- $v | toYaml | nindent 4 }}
     {{- end }} {{- /* /range[0] */}}
   {{- end }} {{- /* /if[1] */}}
-  {{- if .ctx.Values.files }} {{- /* if[1] */}}
-    {{- range $k, $v := .ctx.Values.files }} {{- /* range[0] */}}
+  {{- if .files }} {{- /* if[1] */}}
+    {{- range $k, $v := .files }} {{- /* range[0] */}}
   - name: {{ $k }}-file
+    {{- $name := include "lib.component.file.name" (dict "ctx" $.ctx "name" $k) }}
       {{- if $v.sensitive }} {{- /* if[2] */}}
     secret:
       defaultMode: 420
-      secretName: "{{- printf "%s-%s" (include "chart.fullname" $.ctx) $k }}"
+      secretName: {{ $name }}
       {{- else }}
     configMap:
-      name: "{{- printf "%s-%s" (include "chart.fullname" $.ctx) $k }}"
+      name: {{ $name }}
       {{- end }} {{- /* /if[2] */}}
     {{- end }} {{- /* /range[0] */}}
   {{- end }} {{- /* /if[1] */}}
