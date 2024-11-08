@@ -4,6 +4,10 @@
 metadata:
   annotations:
     test1: global
+
+shortcuts:
+  hostname: test.company
+
 base:
   workload:
     replicas: 1
@@ -18,9 +22,6 @@ base:
     securityContext:
       seLinuxOptions:
         level: s0:c123,c456
-
-
-    volumes: {}
     containers:
       vaultwarden:
         volumeMounts:
@@ -64,6 +65,26 @@ base:
         args:
           - test
 
+ingress:
+  main:
+    enabled: true
+    class: traefik
+    rules:
+      - host: '{{ .Values.shortcuts.hostname }}'
+        http:
+          paths:
+            - backend:
+                service:
+                  name: '{{ include "chart.fullname" $ }}-main'
+                  port:
+                    number: 8080
+              path: /
+              pathType: Prefix
+    tls:
+      - hosts:
+          - '{{ .Values.shortcuts.hostname }}'
+        secretName: '{{ .Values.shortcuts.hostname }}'
+
 services:
   vaultwarden:
     enabled: true
@@ -86,7 +107,6 @@ storage:
     accessModes:
       - ReadWriteMany
             
-
 config:
   env:
     main:

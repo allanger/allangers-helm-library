@@ -26,7 +26,17 @@
 	)
 }}
 
+{{ 
+	include "lib.component.storage" 
+	(dict	
+		"ctx" .
+	)
+}}
 
-
-
+{{ 
+	include "lib.component.ingress" 
+	(dict	
+		"ctx" .
+	)
+}}
 
