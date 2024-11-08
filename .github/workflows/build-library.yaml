@@ -20,7 +20,8 @@ jobs:
 
       - name: Extract branch name
         shell: bash
-        run: export BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+        run: |
+          export BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
       - name: Push Helm chart to OCI compatible registry (Github)
         run: |
           helm registry login ghcr.io \
