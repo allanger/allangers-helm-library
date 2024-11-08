@@ -21,7 +21,7 @@ jobs:
       - name: Push Helm chart to OCI compatible registry (Github)
         run: |
           export BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          export SHA=$(git rev-parse --short HEAD)
+          export SHA="+$(git rev-parse --short HEAD)"
           helm registry login ghcr.io \
             --username ${{ github.actor }} \
             --password ${{ github.token }}
