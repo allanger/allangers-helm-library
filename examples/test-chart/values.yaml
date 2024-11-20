@@ -1,9 +1,9 @@
 # -- Base is the base layer of the an application. Mostly it shouldn't be edited.
 # -- Only one workload entry is allowed per release
 # -- workload is either Deployment/DaemonSet/StatefulSet/CronJob
-metadata:
-  annotations:
-    test1: global
+#metadata:
+#  annotations:
+#    test1: global
 
 shortcuts:
   hostname: test.company
@@ -14,9 +14,9 @@ base:
     # -- Deployment/DaemonSet/StatefulSet/CronJob
     kind: Deployment
     # -- Metadata to be added to a workload object
-    metadata:
-      annotations:
-        test: local
+    #metadata:
+    #  annotations:
+    #    test: local
     strategy:
       type: RollingUpdate
     securityContext:
