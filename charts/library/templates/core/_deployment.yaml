@@ -61,7 +61,9 @@ template:
     labels:
       {{- $labels | nindent 6 }}
     annotations:
+    {{- if not (eq $annotations "null") }}
     {{- $annotations | nindent 6 }}
+    {{- end }}
     {{
       include "lib.helpers.hashes" 
       (dict 
