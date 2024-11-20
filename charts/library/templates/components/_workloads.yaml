@@ -9,15 +9,15 @@
 	$labels := include "lib.metadata.mergeLabels"
 	(dict
 		"ctx" .ctx
-		"global" .ctx.Values.metadata.labels
-		"local" .ctx.Values.base.workload.metadata.labels
+		"global" ((.ctx.Values).metadata).labels
+		"local" (((.ctx.Values.base).workload).metadata).labels
 	)
 }}
 {{- 
 	$metadata := include "lib.metadata" 
 	(dict 
 		"ctx" .ctx 
-		"annotations" .ctx.Values.base.workload.metadata.annotations
+		"annotations" (((.ctx.Values.base).workload).metadata).annotations
 		"labels" $labels
 	) 
 }}
