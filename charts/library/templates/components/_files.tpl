@@ -11,7 +11,7 @@
 	$labels := include "lib.metadata.mergeLabels"
 	(dict
 		"ctx" $.ctx
-		"global" $.ctx.Values.metadata.labels
+		"global" ($.ctx.Values.metadata).labels
 		"local" ($v.metadata).labels
 	)
 }}
