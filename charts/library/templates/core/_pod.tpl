@@ -94,7 +94,9 @@ initContainers:
     | indent 2 
   }}
   {{- if .init }}
-  restartPolicy: {{ .ContainerData.restartPolicy | default "Always" }}
+  {{- with .ContainerData.restartPolicy }}
+  restartPolicy: {{ . }}
+  {{- end }}
   {{- end }}
   {{-
     include "lib.core.pod.container.command" .ContainerData | nindent 2 
