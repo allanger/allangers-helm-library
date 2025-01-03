@@ -2,8 +2,6 @@ name: Publish an oci artifact for the library
 
 on:
   push:
-    branches:
-      - main
 env:
   HELM_VERSION: v3.15.3
 jobs:
@@ -14,13 +12,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: azure/setup-helm@v4.2.0
+      - name: Install helm unittest
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
+      - name: Run unit tests
+        run: make unit
 
       - name: Push Helm chart to OCI compatible registry (Github)
         run: |
+          export BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          export SHA="+$(git rev-parse --short HEAD)"
           helm registry login ghcr.io \
             --username ${{ github.actor }} \
             --password ${{ github.token }}
           for chart in $(find charts -maxdepth 1 -mindepth 1 -type d); do
+            if [ "${BRANCH}" != "main" ]; then
+              yq e -i ".version += env(SHA)" "$chart/Chart.yaml"
+            fi
             helm package $chart -d chart-packages;
           done
           charts=$(find chart-packages -maxdepth 1 -mindepth 1 -type f)

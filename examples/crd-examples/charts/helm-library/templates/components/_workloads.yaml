@@ -1,0 +1,20 @@
+{{- define "lib.component.workload.allowed" -}} {{- /* define[0] */ -}}
+{{ index .Chart.Annotations "allowed_workload_kinds" }}
+{{- end -}} {{- /* /define[0] */ -}}
+
+{{- define "lib.component.workload" -}} {{- /* define[0] */ -}}
+{{- 
+	$metadata := include "lib.helpers.metadata" 
+	(dict "Context" $ "annotations" .Values.workload.annotations) 
+}}
+{{- if eq .Values.workload.kind "Deployment" -}} {{- /* if[0] */ -}}
+{{- if contains .Values.workload.kind (include "lib.component.workload.allowed" .) }}{{- /* if[0] */ -}}
+{{- 
+	include "lib.core.deployment" 
+	(dict "ctx" . "metadata" $metadata) 
+}} 
+{{- else -}}
+{{- fail (printf "workload kind is not allowed: %s" .Values.workload.kind) -}}
+{{- end }}{{- /* if[1] */ -}}
+{{- end -}} {{- /* /if[0]*/ -}}
+{{- end -}}{{- /* /define[0] */ -}}

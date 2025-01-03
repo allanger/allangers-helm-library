@@ -1,13 +1,27 @@
 {{/*
 	* This component should make it easier to create pvc
 */}}
-{{- define "lib.component.service" }}
-{{- range $k, $v := .Values.service }}
-{{- $customName := printf "%s-%s" (include "chart.fullname" $) $k }}
-{{- if $v.enabled }} {{- /* if[0] */}}
+{{- define "lib.component.service" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- range $k, $v := .ctx.Values.services }} {{- /* range[1] */}}
+{{- $customName := include "lib.component.service.name" (dict "ctx" $.ctx "name" $k) }}
+{{- if $v.enabled }} {{- /* if[2] */}}
+{{-
+	$labels := include "lib.metadata.mergeLabels"
+	(dict
+		"ctx" $.ctx
+		"global" ($.ctx.Values.metadata).labels
+		"local" ($v.metadata).labels
+	)
+}}
 {{- 
-	$metadata := include "lib.helpers.metadata" 
-	(dict "Context" $ "customName" $customName "annotations" $v.annotations) 
+	$metadata := include "lib.metadata" 
+	(dict 
+		"ctx" $.ctx 
+		"name" $customName 
+		"annotations" ($v.metadata).annotations
+		"labels" $labels
+	) 
 }}
 {{ $spec := $v }}
 {{- if not $spec.type -}}
@@ -15,8 +29,14 @@
 {{- end }}
 {{ 
   include "lib.core.service"
-  (dict "metadata" $metadata "ctx" $ "spec" $spec)
+  (dict "ctx" $.ctx "metadata" $metadata "spec" $spec)
 }}
 {{- end }}
 {{- end }}
-{{- end }}
+{{- end -}} {{- /* /define[0] */ -}}
+
+{{- define "lib.component.service.name" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "name") -}}
+{{ printf "%s-%s" .ctx.Release.Name .name }}
+{{- end -}} {{- /* /define[0] */ -}}

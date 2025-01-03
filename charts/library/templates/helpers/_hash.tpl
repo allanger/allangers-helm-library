@@ -7,20 +7,23 @@
 # ---------------------------------------------------------------------
 # -- A note from the library:
 # -- Pod annotations currently only support hashes of mounted 
-# -- config files and env variables 
+# -- config files and env variables and annotations inherited from 
+# -- the deployment
 # ---------------------------------------------------------------------
-{{ range $k, $v := .env -}} {{/* range[0] */ -}}
-{{- 
+{{ range $k, $v := .env -}} {{/* range[1] */ -}}
+{{- if $v.enabled -}} {{- /* if[2] */ -}}
+{{
 	include "lib.helpers.hash"
 	(dict "kind" "env" "name" $k "data" $v.data)
 }}
-{{ end -}} {{/* /range[0] */ -}}
-{{ range $k, $v := .files -}} {{/* range[0] */ -}}
-{{- 
+{{ end -}} {{/* /if[2] */ -}}
+{{- end -}} {{- /* /range[1] */ -}}
+{{ range $k, $v := .files -}} {{/* range[1] */ -}}
+{{
 	include "lib.helpers.hash"
-	(dict "kind" "file" "name" $k "data" $v.entries)
+	(dict "kind" "file" "name" $k "data" ($v).entries)
 }}
-{{ end -}} {{/* /range[0] */ -}}
+{{- end -}} {{- /* /range[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.helpers.hash" -}} {{- /* define[0] */ -}}

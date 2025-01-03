@@ -1,0 +1,10 @@
+mergedLabels: 
+{{
+	include "lib.metadata.mergeLabels" 
+	(dict 
+		"ctx" $ 
+		"global" .Values.labels.global
+		"local" .Values.labels.local
+		)
+	| indent 2
+}}

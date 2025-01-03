@@ -1,0 +1,16 @@
+readinessProbe:
+  tcpSocket:
+    port: '{{ .Values.tplProbes.port }}'
+    initialDelaySeconds: 15
+    periodSeconds: 10
+livenessProbe:
+  tcpSocket:
+    initialDelaySeconds: 15
+    port: '{{ .Values.tplProbes.port }}'
+    periodSeconds: 10
+startupProbe:
+  tcpSocket:
+    port: '{{ .Values.tplProbes.port }}'
+    initialDelaySeconds: 15
+    periodSeconds: 10
+

@@ -1,0 +1,17 @@
+{{- if .Values.fail.key1 -}}
+{{- include "lib.error.noKey" $ }}
+{{- end -}}
+
+{{- if .Values.fail.key2 -}}
+{{- include "lib.error.noKey" (dict "Context" $) }}
+{{- end -}}
+
+{{- if .Values.fail.key3 -}}
+{{ $ctx := dict "labels" "dummy" }}
+{{- include "lib.error.noKey" (dict "ctx" $ctx "key" "dummy") }}
+{{- end -}}
+
+{{- if .Values.pass.key1 -}}
+{{ $ctx := dict "labels" "dummy" }}
+{{- include "lib.error.noKey" (dict "ctx" $ctx "key" "labels") }}
+{{- end -}}
