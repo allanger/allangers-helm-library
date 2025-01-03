@@ -1,0 +1,104 @@
+suite: Validate labels creation
+templates:
+  - labels.yaml
+tests:
+  - it: Labels should be generated correctly (default)
+    asserts:
+      - equal:
+          path: mergedLabels["helm.sh/chart"]
+          value: test-metadata-0.1.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/version"]
+          value: 1.16.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: mergedLabels["app.kubernetes.io/name"]
+          value: test-metadata
+      - equal:
+          path: mergedLabels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+  - it: Labels should be generated correctly (local)
+    values:
+      - ./labels-values/local.yaml
+    asserts:
+      - equal:
+          path: mergedLabels["helm.sh/chart"]
+          value: test-metadata-0.1.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/version"]
+          value: 1.16.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: mergedLabels["app.kubernetes.io/name"]
+          value: test-metadata
+      - equal:
+          path: mergedLabels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: mergedLabels["localLabel"]
+          value: here
+      - equal:
+          path: mergedLabels["localTest"]
+          value: here
+
+  - it: Labels should be generated correctly (global)
+    values:
+      - ./labels-values/global.yaml
+    asserts:
+      - equal:
+          path: mergedLabels["helm.sh/chart"]
+          value: test-metadata-0.1.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/version"]
+          value: 1.16.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: mergedLabels["app.kubernetes.io/name"]
+          value: test-metadata
+      - equal:
+          path: mergedLabels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: mergedLabels["globalLabel"]
+          value: here
+      - equal:
+          path: mergedLabels["globalTest"]
+          value: here
+  
+  - it: Labels should be generated correctly (both)
+    values:
+      - ./labels-values/both.yaml
+    asserts:
+      - equal:
+          path: mergedLabels["helm.sh/chart"]
+          value: test-metadata-0.1.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/version"]
+          value: 1.16.0
+      - equal:
+          path: mergedLabels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - equal:
+          path: mergedLabels["app.kubernetes.io/name"]
+          value: test-metadata
+      - equal:
+          path: mergedLabels["app.kubernetes.io/instance"]
+          value: RELEASE-NAME
+      - equal:
+          path: mergedLabels["localLabel"]
+          value: here
+      - equal:
+          path: mergedLabels["localTest"]
+          value: here
+      - equal:
+          path: mergedLabels["globalLabel"]
+          value: here
+      - equal:
+          path: mergedLabels["globalTest"]
+          value: here

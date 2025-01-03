@@ -1,0 +1,18 @@
+suite: Test lookup helpers
+templates:
+  - lookup.yaml
+tests:
+  - it: Should find env data
+    asserts:
+      - equal:
+          path: lookupEnv
+          value:
+            sensitive: false
+            data:
+              TEST: test
+  - it: Should fail while looking for env
+    set:
+      tests.lookup.fail: true
+    asserts:
+      - failedTemplate:
+          errorMessage: entry notset is not found in env

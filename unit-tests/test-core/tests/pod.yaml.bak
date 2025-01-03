@@ -1,0 +1,200 @@
+suite: Test pod generation
+templates:
+  - pod.yaml
+tests:
+  - it: Validate probes
+    values:
+      - ./pod-values/set-probes.yaml
+    asserts:
+      - equal:
+          path: readinessProbe
+          value:
+            readinessProbe:
+              exec:
+                command:
+                  - cat
+                  - /tmp/healthy
+                initialDelaySeconds: 5
+                periodSeconds: 5
+      - equal: 
+          path: startupProbe
+          value:      
+            startupProbe:
+              exec:
+                command:
+                  - cat
+                  - /tmp/healthy
+                initialDelaySeconds: 5
+                periodSeconds: 5
+
+      - equal: 
+          path: livenessProbe
+          value:
+            livenessProbe:
+              exec:
+                command:
+                  - cat
+                  - /tmp/healthy
+                initialDelaySeconds: 5
+                periodSeconds: 5
+  - it: Validate empty probes
+    values:
+      - ./pod-values/empty-probes.yaml
+    asserts:
+      - equal:
+          path: readinessProbe
+          value: null
+      - equal: 
+          path: startupProbe
+          value: null
+      - equal: 
+          path: livenessProbe
+          value: null
+  - it: Validate templated probes
+    values:
+      - ./pod-values/tpl-probes.yaml
+    set:
+      tplProbes.port: 8080
+    asserts:
+      - equal:
+          path: readinessProbe
+          value:
+            readinessProbe:
+              tcpSocket:
+                port: "8080"
+                initialDelaySeconds: 15
+                periodSeconds: 10
+      - equal: 
+          path: startupProbe
+          value:      
+            startupProbe:
+              tcpSocket:
+                port: "8080"
+                initialDelaySeconds: 15
+                periodSeconds: 10
+      - equal: 
+          path: livenessProbe
+          value:
+            livenessProbe:
+              tcpSocket:
+                port: "8080"
+                initialDelaySeconds: 15
+                periodSeconds: 10
+  - it: Validate command and args (empty)
+    asserts:
+      - equal:
+          path: command
+          value: null
+      - equal:
+          path: args
+          value: null
+  
+  - it: Validate command and args
+    values:
+      - ./pod-values/command-and-args.yaml
+    asserts:
+      - equal:
+          path: command
+          value: 
+            command:
+              - sh
+      - equal:
+          path: args
+          value:
+            args:
+              - -c
+              - echo test
+  - it: Validate default image tag
+    set: 
+      image.tag: test
+      pass.onlyTag: true
+    asserts:
+      - equal:
+          path: imageTagDefault1
+          value: 1.16.0 
+      - equal:
+          path: imageTagDefault2
+          value: 1.16.0
+      - equal:
+          path: imageTagCustom1
+          value: test
+      - equal:
+          path: imageTagCustom2
+          value: test
+
+  - it: Validate fail of image tag builder
+    set: 
+      fail.imageTag: true
+    asserts:
+      - failedTemplate:
+          errorMessage: .tag or .appVersion must be passed to this helper
+
+  - it: Validate the image object
+    asserts:
+      - equal:
+          path: image["image"]
+          value: reg.company/test:1.16.0
+      - equal:
+          path: image["imagePullPolicy"]
+          value: Always
+  
+  - it: Validate the image object
+    set:
+      image.registry: custom.company
+      image.repository: custom
+      image.tag: test
+      image.pullPolicy: IfNotPresent
+    asserts:
+      - equal:
+          path: image["image"]
+          value: custom.company/custom:test
+      - equal:
+          path: image["imagePullPolicy"]
+          value: IfNotPresent
+  
+  - it: Validate the default pod security context
+    asserts:
+      - equal:
+          path: podSecurityContext
+          value:
+            securityContext:
+              runAsUser: 1000
+              runAsGroup: 3000
+              fsGroup: 2000
+              seccompProfile:
+                type: RuntimeDefault
+  
+  
+  - it: Validate a custom pod security context
+    values:
+      - ./pod-values/custom-security-context.yaml
+    asserts:
+      - equal:
+          path: podSecurityContext
+          value:
+            securityContext:
+              seLinuxOptions:
+                level: "s0:c123,c456"
+  
+  - it: Validate the default container security context
+    asserts:
+      - equal:
+          path: containerSecurityContext
+          value:
+            securityContext:
+              runAsUser: 2000
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+  
+  - it: Validate a custom container security context
+    values:
+      - ./pod-values/custom-security-context.yaml
+    asserts:
+      - equal:
+          path: containerSecurityContext
+          value:
+            securityContext:
+              seLinuxOptions:
+                level: "s0:c123,c456"

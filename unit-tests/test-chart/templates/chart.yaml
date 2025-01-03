@@ -1,0 +1,2 @@
+chart: {{ include "lib.chart.chart" (dict "ctx" $) }}
+release: {{ include "lib.chart.name" (dict "ctx" $) }}

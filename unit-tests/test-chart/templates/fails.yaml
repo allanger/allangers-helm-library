@@ -1,0 +1,12 @@
+{{- if (.Values.fail).name -}}
+name: {{ include "lib.chart.name" (dict "Context" $) }}
+{{- end -}}
+{{- if (.Values.fail).chart -}}
+chart: {{ include "lib.chart.chart" . }}
+{{- end -}}
+{{- if (.Values.fail).labels -}}
+labels: {{ include "lib.chart.chart" $ }}
+{{- end -}}
+{{- if (.Values.fail).selectorLabels -}}
+selectorLabels: {{ include "lib.chart.chart" . }}
+{{- end -}}

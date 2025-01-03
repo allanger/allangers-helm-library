@@ -1,0 +1,30 @@
+suite: Test context errors
+templates:
+  - errors/key.yaml
+tests:
+  - it: Should throw error (missing 1)
+    set: 
+      fail.key1: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+
+  - it: Should throw error (missing 2)
+    set: 
+      fail.key2: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+
+  - it: Should throw error (missing 3)
+    set: 
+      fail.key3: true
+    asserts:
+      - failedTemplate:
+          errorMessage: key dummy must be not null
+
+  - it: Should not throw error
+    set: 
+      pass.key1: true
+    asserts:
+      - notFailedTemplate: {}

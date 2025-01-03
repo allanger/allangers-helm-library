@@ -1,0 +1,19 @@
+suite: valid generation
+templates:
+  - chart.yaml
+tests:
+  - it: Chart name should be generated correctly
+    asserts:
+      - equal:
+          path: chart
+          value: test-chart-0.1.0
+      - equal: 
+          path: release
+          value: test-chart
+  - it: Release name should be overridden
+    set:
+      nameOverride: test
+    asserts:
+      - equal: 
+          path: release
+          value: test

@@ -1,0 +1,28 @@
+{{- if .Values.fail.ctx1 -}}
+{{- include "lib.error.noCtx" $ }}
+{{- end -}}
+
+{{- if .Values.fail.ctx2 -}}
+{{- include "lib.error.noCtx" . }}
+{{- end -}}
+
+{{- if .Values.fail.ctx3 -}}
+{{- include "lib.error.noCtx" (dict "Context" $) }}
+{{- end -}}
+
+{{- if .Values.fail.ctx4 -}}
+{{- include "lib.error.noCtx" (dict "ctx" "string") }}
+{{- end -}}
+
+{{- if .Values.fail.ctx5 -}}
+{{- include "lib.error.noCtx" (dict "ctx" 4) }}
+{{- end -}}
+
+{{- if .Values.fail.ctx6 -}}
+{{- $list := list 1 2 3 -}}
+{{- include "lib.error.noCtx" (dict "ctx" $list) }}
+{{- end -}}
+
+{{- if .Values.pass.ctx1 -}}
+{{- include "lib.error.noCtx" (dict "ctx" $) }}
+{{- end -}}

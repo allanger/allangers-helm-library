@@ -1,0 +1,7 @@
+labels:
+  global:
+    globalLabel: here
+    globalTest: here
+  local:
+    localLabel: here
+    localTest: here

@@ -1,0 +1,28 @@
+# ---------------------------------------------------------------------
+# A set of tests to be executed should be define via values
+# ---------------------------------------------------------------------
+---
+tests:
+  lookup:
+    fail: false
+fail:
+  ctx1: false
+  ctx2: false
+  ctx3: false
+  ctx4: false
+  ctx5: false
+  ctx6: false
+  key1: false
+  key2: false
+  key3: false
+pass:
+  ctx1: false
+  key1: false
+
+# ---------------------------------------------------------------------
+config:
+  env:
+    test:
+      sensitive: false
+      data:
+        TEST: test

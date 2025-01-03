@@ -1,0 +1,8 @@
+labels:
+  global: {}
+  local: {}
+metadata:
+  labels: {}
+  annotations: {}
+  customName: ""
+  withAnnotations: false

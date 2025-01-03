@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------
+# ** Pod test **
+# ---------------------------------------------------------------------
+
+imageTagDefault1: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion "tag" "") }}
+imageTagDefault2: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion) }}
+imageTagCustom1: {{ include "lib.core.pod.container.image.tag" (dict "appVersion" .Chart.AppVersion "tag" .Values.image.tag) }}
+
+{{- if .Values.pass.onlyTag }}
+imageTagCustom2: {{ include "lib.core.pod.container.image.tag" (dict "tag" .Values.image.tag) }}
+{{- end }}
+
+{{- if .Values.fail.imageTag -}}
+imageTagFail: {{ include "lib.core.pod.container.image.tag" . }}
+{{- end }}
+
+image:
+{{-
+  include "lib.core.pod.container.image"
+  (dict
+    "chart" .Chart
+    "image" .Values.image
+  )
+  | indent 2
+}}
+
+podSecurityContext:
+{{
+  include "lib.core.pod.securityContext"
+  (dict
+    "securityContext" .Values.pod.podSecurityContext
+  )
+  | indent 2
+}}
+
+envFrom:
+{{ 
+  include "lib.core.pod.container.envFrom" 
+  (dict 
+    "ctx" . 
+    "envFrom" .Values.workload.containers.test.envFrom
+  ) 
+  | indent 2
+}}
+
+containerSecurityContext: 
+{{
+  include "lib.core.pod.container.securityContext"
+  (dict
+    "ctx" .
+    "securityContext" .Values.container.securityContext
+  )
+  | indent 2
+}}

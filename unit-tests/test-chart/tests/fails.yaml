@@ -1,0 +1,30 @@
+templates:
+  - fails.yaml
+tests:
+  - it: name should fail
+    set:
+      fail.name: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+
+  - it: Chart should fail
+    set:
+      fail.chart: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+
+  - it: Labels should fail
+    set:
+      fail.labels: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+  
+  - it: Selector labels should fail
+    set:
+      fail.selectorLabels: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided

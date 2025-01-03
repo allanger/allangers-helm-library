@@ -1,0 +1,32 @@
+---
+# -- Pod tests
+image:
+  tag:
+  registry: reg.company
+  repository: test
+  pullPolicy:
+pass:
+  tagOnly: false
+fail:
+  imageTag: false
+
+pod:
+  podSecurityContext: {}
+
+container:
+  securityContext: {}
+
+workload:
+  containers:
+    test:
+      envFrom:
+        test: {}
+
+config:
+  env:
+    test:
+      sensitive: false
+      data:
+        TEST: test
+
+

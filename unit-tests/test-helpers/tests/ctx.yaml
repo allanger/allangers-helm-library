@@ -1,0 +1,45 @@
+suite: Test context errors
+templates:
+  - errors/ctx.yaml
+tests:
+  - it: Should throw error (missing 1)
+    set: 
+      fail.ctx1: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+  - it: Should throw error (missing 2)
+    set: 
+      fail.ctx2: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+  - it: Should throw error (missing 3)
+    set: 
+      fail.ctx3: true
+    asserts:
+      - failedTemplate:
+          errorMessage: no context provided
+  - it: Should throw error (wrong type string)
+    set: 
+      fail.ctx4: true
+    asserts:
+      - failedTemplate:
+          errorMessage: unexpected type of ctx
+  - it: Should throw error (wrong type int)
+    set: 
+      fail.ctx5: true
+    asserts:
+      - failedTemplate:
+          errorMessage: unexpected type of ctx
+  - it: Should throw error (wrong type list)
+    set: 
+      fail.ctx6: true
+    asserts:
+      - failedTemplate:
+          errorMessage: unexpected type of ctx
+  - it: Should not throw error
+    set: 
+      pass.ctx1: true
+    asserts:
+      - notFailedTemplate: {}
