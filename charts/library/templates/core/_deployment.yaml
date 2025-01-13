@@ -72,8 +72,7 @@ template:
         | nindent 6 
     }}
   spec:
-    {{- include "lib.core.pod.securityContext" (dict "ctx" .ctx) | nindent 4 }}
-    {{- include "lib.core.pod.volumes" (dict "ctx" .ctx) | nindent 4 }}
-    {{- include "lib.core.pod.containers" .ctx | nindent 4 }}
-    {{- include "lib.core.pod.initContainers" .ctx | nindent 4 }}
+    {{- .securityContext | nindent 4 }}
+    {{ .containers  | nindent 4 }}
+    {{ .volumes | nindent 4 }}
 {{- end -}} {{- /* /define[0] */ -}}

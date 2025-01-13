@@ -17,8 +17,5 @@ spec:
       port: {{ $v.port }}
       targetPort: {{ $v.targetPort}}
       protocol: {{ $v.protocol}}
-      {{- with $v.nodePort }}
-      nodePort: {{ . }}
-      {{- end }}
 {{- end }} {{- /* /range[0] */}}
 {{- end }}

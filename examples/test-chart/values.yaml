@@ -1,77 +1,71 @@
+---
 shortcuts:
   hostname: vaultwarden.company
   dataFolder: /app/data
   logFolder: /app/logs
   rocketPort: 8080
 
-workload:
-  annotations:
-    test: test
-  kind: Deployment
-  strategy:
-    type: RollingUpdate
-  containers:
-    vaultwarden:
-      command: 
-        - test
-      args: 
-        - test
-        - lala
-      image:
-        registry: registry.hub.docker.com
-        repository: vaultwarden/server
-        tag:
-        pullPolicy: Always
-      ports:
-        main: vaultwarden
-        raw:
-          - containerPort: 4040
-            protocol: TCP
-      mounts:
-        storage:
-          data:
-            path: /app/data/
-        files:
-          main:
-            path: /test/files
-          # logs:
-            # path: /app/logs
-      envFrom:
-        - main
-        - secrets
-      livenessProbe:
-        exec:
-          command:
-            - sh
-            - /healthcheck.sh
-      readinessProbe:
-        exec:
-          command:
-            - sh
-            - /healthcheck.sh
-        initialDelaySeconds: 10
-        periodSeconds: 10
+base:
+  workload:
+    kind: Deployment
+    strategy:
+      type: RollingUpdate
+    containers:
+      vaultwarden:
+        image:
+          registry: registry.hub.docker.com
+          repository: vaultwarden/server
+          tag:
+          pullPolicy: Always
+        ports:
+          main: 
+            - vaultwarden
+        volumeMounts:
+          storage:
+            data:
+              path: /app/data/
+          extraVolumes:
+            logs:
+              path: /app/logs
+        envFrom:
+          main: {}
+          secrets: {}
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - /healthcheck.sh
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - /healthcheck.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
 
 ingress:
   main:
     enabled: true
     class: traefik
-    annotations:
-      annotation: test
     rules:
-      - hosts: vaultwarden.softplayer.net
+      - host: '{{ .Values.shortcuts.hostname }}'
         http:
           paths:
             - backend:
                 service:
-                  name: '{{ include "chart.fullname" $ }}'
-                  port: 8080
+                  name: '{{ include "chart.fullname" $ }}-main'
+                  port:
+                    number: 8080
+              path: /
+              pathType: Prefix
     tls:
       - hosts:
-          - vaultwarden.softplayer.net
-        secretName: vaultwarden.softplayer.net
-
-service:
+          - '{{ .Values.shortcuts.hostname }}'
+        secretName: '{{ .Values.shortcuts.hostname }}'
+extraVolumes:
+  logs: 
+    emptyDir: {}
+services:
   main:
     enabled: true
     type: ClusterIP
@@ -87,82 +81,54 @@ storage:
     storageClassName: default
     size: 1Gi
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
   logs:
     enabled: false
     storageClassName: default
-    size: 1Gi
+    size: 1G
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
 
-env:
-  main:
-    enabled: true 
-    sensitive: false
-    remove: []
-    annotations: 
-      test: test
-    data:
-      DOMAIN: '{{ .Values.shortcuts.hostname }}' 
-      DATA_FOLDER: '{{ .Values.shortcuts.dataFolder }}'
-      LOG_FILE: '{{ .Values.shortcuts.logsFolder }}/vaultwarden.log'
-      ROCKET_PORT: '{{ .Values.shortcuts.rocketPort }}'
-  secrets:
-    enabled: true
-    sensitive: true
-    remove:
-      - TO_REMOVE
-    data: 
-      DB_PASSWORD: secret
-      TO_REMOVE: me
-files:
-  cm:
-    enabled: true
-    sensitive: false
-    entries:
-      test.txt: 
-        data: |-
-          lala
-  main:
-    enabled: true
-    sensitive: false
-    remove: []
-    annotations:
-      test: test
-    entries:
-      something.txt:
-        data: |-
-          this is a simple txt file
-      templated.txt:
-        data: |-
-          Welcome to {{ .Values.shortcuts.hostname }}
-      converted.json:
-        convertTo: json
-        data: 
-          item: value   
-          list:
-            - some
-            - list
-            - values
-          map:
-            of: strings
-      converted.toml:
-        convertTo: toml
-        data: 
-          item: value   
-          list:
-            - some
-            - list
-            - values
-          map:
-            of: strings
-      converted.yaml:
-        convertTo: yaml
-        data: 
-          item: value   
-          list:
-            - some
-            - list
-            - values
-          map:
-            of: strings
+config:
+  # -- Please have a look here: https://github.com/dani-garcia/vaultwarden/blob/main/.env.template
+  env:
+    main:
+      enabled: true
+      sensitive: false
+      remove: []
+      data:
+        DOMAIN: '{{ .Values.shortcuts.hostname }}'
+        SMTP_HOST: ~
+        SMTP_SECURITY: startls
+        SMTP_PORT: 587
+        SMTP_AUTH_MECHANISM: Plain
+        SMTP_FROM: vaultwarden@softplayer.net
+        SMTP_FROM_NAME: Soft Player
+        SMTP_DEBUG: false
+        SMTP_ACCEPT_INVALID_HOSTNAMES: 'false'
+        SMTP_ACCEPT_INVALID_CERTS: 'false'
+        SMTP_USERNAME: ''
+        DATA_FOLDER: /app/data/
+        ROCKET_PORT: '{{ .Values.shortcuts.rocketPort }}'
+        SHOW_PASSWORD_HINT: 'true'
+        SIGNUPS_ALLOWED: 'false'
+        INVITATIONS_ALLOWED: 'true'
+        SIGNUPS_DOMAINS_WHITELIST: "*"
+        SIGNUPS_VERIFY: 'true'
+        WEB_VAULT_ENABLED: 'true'
+        LOG_FILE: /app/logs
+        LOG_LEVEL: info
+        DB_CONNECTION_RETRIES: '10'
+        DATABASE_MAX_CONNS: '10'
+        ORG_GROUPS_ENABLED: 'true'
+        ORG_EVENTS_ENABLED: 'true'
+        ORG_CREATION_USERS: ""
+  
+    secrets:
+      enabled: true
+      sensitive: true
+      remove: []
+      data:
+        ADMIN_TOKEN: "R@ndomToken$tring"
+        DATABASE_URL: ''
+        SMTP_PASSWORD: ''
