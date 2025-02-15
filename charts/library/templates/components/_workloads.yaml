@@ -37,6 +37,14 @@
 }}
 
 {{
+	$initContainers := include "lib.core.pod.initContainers"
+	(dict
+	"ctx" .ctx
+	"containers" .ctx.Values.base.workload.initContainers
+	)
+}}
+
+{{
 	$volumes := include "lib.core.pod.volumes"
 	(dict
 		"ctx" .ctx
@@ -55,6 +63,7 @@
 		"metadata" $metadata
 		"securityContext" $securityContext
 		"containers" $containers
+    "initContainers" $initContainers
 		"volumes" $volumes
 	) 
 }} 

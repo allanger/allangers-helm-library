@@ -22,6 +22,7 @@ spec:
     "securityContext" .securityContext
     "metadata" .metadata
     "containers" .containers
+    "initContainers" .initContainers
     "volumes" .volumes
   ) 
   | indent 2 
@@ -43,6 +44,7 @@ selector:
     "securityContext" .securityContext
     "metadata" .metadata
     "containers" .containers
+    "initContainers" .initContainers
     "volumes" .volumes
   ) 
 }}
@@ -54,6 +56,7 @@ selector:
 {{- include "lib.error.noKey" (dict "ctx" . "key" "securityContext") -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "metadata") -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "containers") -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "initContainers") -}}
 {{- $labels := toYaml (index (fromYaml .metadata) "labels") -}}
 {{- $annotations := toYaml (index (fromYaml .metadata) "annotations") -}}
 template:
@@ -74,5 +77,8 @@ template:
   spec:
     {{- .securityContext | nindent 4 }}
     {{ .containers  | nindent 4 }}
+    {{- if .initContainers }} {{- /* if[1] */}}
+    {{ .initContainers | nindent 4 }}
+    {{- end }} {{- /* if[1] */}}
     {{ .volumes | nindent 4 }}
 {{- end -}} {{- /* /define[0] */ -}}
