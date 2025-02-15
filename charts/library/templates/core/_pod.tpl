@@ -55,8 +55,8 @@ volumes:
   {{- end }} {{- /* /if[1] */}}
   {{- if .files }} {{- /* if[1] */}}
     {{- range $k, $v := .files }} {{- /* range[0] */}}
-  - name: {{ $k }}-file
     {{- $name := include "lib.component.file.name" (dict "ctx" $.ctx "name" $k) }}
+  - name: {{ $name }}
       {{- if $v.sensitive }} {{- /* if[2] */}}
     secret:
       defaultMode: 420
