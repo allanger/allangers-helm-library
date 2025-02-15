@@ -100,6 +100,24 @@ containers:
 {{- end -}} {{- /* define[0] */ -}}
 
 {{- define "lib.core.pod.initContainers" -}} {{- /* define[0] */ -}}
+{{- $ctx := .ctx }}
+initContainers:
+{{- $containers := list }}
+{{- range $k, $v := .containers }} {{- /* range[1] */}}
+{{- $containerRaw := include "lib.core.pod.container" 
+    (dict 
+      "ctx" $ctx
+      "name" $k 
+      "data" $v
+    )
+}}
+{{- $container := fromYaml $containerRaw }}
+{{- if hasKey $container "Error" }} {{- /* if[2] */}}
+{{- fail (printf "%s\n%v" $container $containerRaw) }}
+{{- end }} {{- /* /if[1] */}}
+{{- $containers = append $containers $container }}
+{{- end }} {{- /* /range[1] */}}
+{{ $containers | toYaml | indent 2 }}
 {{- end -}} {{- /* define[0] */ -}}
 
 {{- define "lib.core.pod.container.image.tag" -}} {{/* define[0] */}}
@@ -113,5 +131,3 @@ containers:
   {{ fail ".tag or .appVersion must be passed to this helper"}}
 {{- end -}} {{/* /if[1] */}}
 {{- end -}} {{/* /define[0] */}}
-
-
