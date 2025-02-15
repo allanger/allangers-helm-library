@@ -8,7 +8,7 @@
 name: {{ .name }}
 {{ include "lib.core.pod.container.securityContext" (dict "securityContext" .data.securityContext) }}
 {{ include "lib.core.pod.container.command" (dict "command" .data.command) }}
-{{ include "lib.core.pod.container.args" (dict "args" .data.command) }}
+{{ include "lib.core.pod.container.args" (dict "args" .data.args) }}
 {{ include "lib.core.pod.container.livenessProbe" (dict "ctx" .ctx "probe" .data.livenessProbe) }}
 {{ include "lib.core.pod.container.readinessProbe" (dict "ctx" .ctx "probe" .data.readinessProbe) }}
 {{ include "lib.core.pod.container.startupProbe" (dict "ctx" .ctx "probe" .data.readinessProbe) }}
@@ -211,4 +211,3 @@ ports:
 {{- end -}} {{- /* /range[0] */ -}}
 {{- end -}} {{- /* /if[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
-
