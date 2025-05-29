@@ -115,7 +115,7 @@ startupProbe:
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.image" -}} {{/* define[0] */}}
-{{- include "lib.error.noCtx" . -}/}
+{{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "image") -}}
 image: {{ printf "%s/%s:%s" 
   .image.registry .image.repository 
