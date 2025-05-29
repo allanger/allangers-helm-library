@@ -9,13 +9,13 @@
 # -- Pod annotations currently only support hashes of mounted 
 # -- config files and env variables 
 # ---------------------------------------------------------------------
-{{ range $k, $v := .env -}} {{/* range[0] */ -}}
+{{ range $k, $v := .env }} {{/* range[0] */}}
 {{
 	include "lib.helpers.hash"
 	(dict "kind" "env" "name" $k "data" $v.data)
 }}
 {{ end -}} {{/* /range[0] */ -}}
-{{ range $k, $v := .files -}} {{/* range[0] */ -}}
+{{ range $k, $v := .files }} {{/* range[0] */}}
 {{
 	include "lib.helpers.hash"
 	(dict "kind" "file" "name" $k "data" $v.entries)
