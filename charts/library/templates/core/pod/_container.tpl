@@ -4,12 +4,15 @@
 {{- define "lib.core.pod.container" -}} {{- /* define[0] */ -}}
 {{- include "lib.error.noCtx" . -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "data") -}}
-{{- include "lib.error.noKey" (dict "ctx" . "key" "name") -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "data") -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "isInit") -}}
 name: {{ .name }}
+{{- if .isInit }}
 {{- if .restartPolicy }}
 restartPolicy: {{ .restartPolicy }}
 {{- else }}
-restartPolicy: Always
+restartPolicy: Never
+{{- end }}
 {{- end }}
 {{ include "lib.core.pod.container.securityContext" (dict "securityContext" .data.securityContext) }}
 {{ include "lib.core.pod.container.command" (dict "command" .data.command) }}

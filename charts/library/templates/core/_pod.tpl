@@ -88,6 +88,7 @@ containers:
       "ctx" $ctx
       "name" $k 
       "data" $v
+      "isInit" false
     )
 }}
 {{- $container := fromYaml $containerRaw }}
@@ -109,6 +110,7 @@ initContainers:
       "ctx" $ctx
       "name" $k 
       "data" $v
+      "isInit" true
     )
 }}
 {{- $container := fromYaml $containerRaw }}
