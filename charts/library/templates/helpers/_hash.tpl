@@ -19,10 +19,12 @@
 {{ end -}} {{/* /if[2] */ -}}
 {{- end -}} {{- /* /range[1] */ -}}
 {{ range $k, $v := .files -}} {{/* range[1] */ -}}
+{{- if $v.enabled -}} {{- /* if[2] */ -}}
 {{
 	include "lib.helpers.hash"
-	(dict "kind" "file" "name" $k "data" ($v).entries)
+	(dict "kind" "file" "name" $k "data" $v.entries)
 }}
+{{ end -}} {{/* /if[2] */ -}}
 {{- end -}} {{- /* /range[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
