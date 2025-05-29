@@ -24,5 +24,5 @@
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.helpers.hash" -}} {{- /* define[0] */ -}}
-{{ printf "helm.badhouseplants.net/%s-%s" .kind .name }}: {{ .data | toString | sha256sum }}
+{{ printf "helm.badhouseplants.net/%s-%s\n" .kind .name }}: {{ .data | toString | sha256sum }}
 {{- end -}} {{- /* /end[0] */ -}}
