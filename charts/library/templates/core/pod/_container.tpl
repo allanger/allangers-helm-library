@@ -10,8 +10,6 @@ name: {{ .name }}
 {{- if .isInit }}
 {{- if .restartPolicy }}
 restartPolicy: {{ .restartPolicy }}
-{{- else }}
-restartPolicy: Never
 {{- end }}
 {{- end }}
 {{ include "lib.core.pod.container.securityContext" (dict "securityContext" .data.securityContext) }}
