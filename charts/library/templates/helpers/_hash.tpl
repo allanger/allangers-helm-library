@@ -22,7 +22,7 @@
 {{- if $v.enabled -}} {{- /* if[2] */ -}}
 {{
 	include "lib.helpers.hash"
-	(dict "kind" "file" "name" $k "data" $v.data)
+	(dict "kind" "file" "name" $k "data" $v.entries)
 }}
 {{ end -}} {{/* /if[2] */ -}}
 {{- end -}} {{- /* /range[1] */ -}}
