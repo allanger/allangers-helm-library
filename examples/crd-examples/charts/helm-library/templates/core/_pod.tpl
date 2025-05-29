@@ -76,6 +76,11 @@ containers:
 
 {{- define "lib.core.pod.container" -}} {{- /* define[0] */ -}}
 - name: {{ .ContainerName }}
+  {{- if .restartPolicy }}
+  restartPolicy: {{ .restartPolicy }}
+  {{- else }}
+  restartPolicy: Always
+  {{- end }}
   {{- 
     include "lib.core.pod.container.securityContext" 
     .ContainerData | nindent 2 
