@@ -6,6 +6,11 @@
 {{- include "lib.error.noKey" (dict "ctx" . "key" "data") -}}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "name") -}}
 name: {{ .name }}
+{{- if .restartPolicy }}
+restartPolicy: {{ .restartPolicy }}
+{{- else }}
+restartPolicy: Always
+{{- end }}
 {{ include "lib.core.pod.container.securityContext" (dict "securityContext" .data.securityContext) }}
 {{ include "lib.core.pod.container.command" (dict "command" .data.command) }}
 {{ include "lib.core.pod.container.args" (dict "args" .data.args) }}
