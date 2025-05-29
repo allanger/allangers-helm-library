@@ -115,7 +115,7 @@ startupProbe:
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.image" -}} {{/* define[0] */}}
-{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noCtx" . -}/}
 {{- include "lib.error.noKey" (dict "ctx" . "key" "image") -}}
 image: {{ printf "%s/%s:%s" 
   .image.registry .image.repository 
@@ -168,7 +168,7 @@ volumeMounts:
 {{- if eq $mountKind "storage" }} {{- /* if[2] */}}
 {{- range $mountName, $mountEntry := $mountData }} {{- /* range[3] */}}
 {{- $name := include "lib.component.storage.name" (dict "ctx" $.ctx "name" $mountName) }}
-{{- if get $mountEntry "enabled" }}
+{{- if not (get $mountEntry "disabled") }}
   - name: {{ $mountName }}-storage
     mountPath: {{ $mountEntry.path }}
 {{- end }}
@@ -177,7 +177,7 @@ volumeMounts:
 {{- if eq $mountKind "files" }} {{- /* if[1] */}}
 {{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
 {{- $name := include "lib.component.file.name" (dict "ctx" $.ctx "name" $mountName) }}
-{{- if get $mountEntry "enabled" }} 
+{{- if not (get $mountEntry "disabled") }}
   - name: {{ $name }}
     mountPath: {{ $mountEntry.path }} 
 {{- if $mountEntry.subPath }} {{- /* if[2] */}}
@@ -188,7 +188,7 @@ volumeMounts:
 {{- end }} {{- /* /if[1] */}}
 {{- if eq $mountKind "extraVolumes" }} {{- /* if[1] */}}
 {{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
-{{- if get $mountEntry "enabled" }} 
+{{- if not (get $mountEntry "disabled") }}
   - name: {{ printf "%s-extra" $mountName }}
     mountPath: {{ $mountEntry.path }} 
 {{- end }}
