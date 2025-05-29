@@ -168,24 +168,30 @@ volumeMounts:
 {{- if eq $mountKind "storage" }} {{- /* if[2] */}}
 {{- range $mountName, $mountEntry := $mountData }} {{- /* range[3] */}}
 {{- $name := include "lib.component.storage.name" (dict "ctx" $.ctx "name" $mountName) }}
+{{- if get $mountEntry "enabled" }}
   - name: {{ $mountName }}-storage
-    mountPath: {{ $mountEntry.path }} 
+    mountPath: {{ $mountEntry.path }}
+{{- end }}
 {{- end }} {{- /* /range[1] */}}
 {{- end }} {{- /* /if[1] */}}
 {{- if eq $mountKind "files" }} {{- /* if[1] */}}
 {{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
 {{- $name := include "lib.component.file.name" (dict "ctx" $.ctx "name" $mountName) }}
+{{- if get $mountEntry "enabled" }} 
   - name: {{ $name }}
     mountPath: {{ $mountEntry.path }} 
 {{- if $mountEntry.subPath }} {{- /* if[2] */}}
     subPath: {{ $mountEntry.subPath }}
+{{- end }}
 {{- end }} {{- /* /if[2] */}}
 {{- end }} {{- /* /range[1] */}}
 {{- end }} {{- /* /if[1] */}}
 {{- if eq $mountKind "extraVolumes" }} {{- /* if[1] */}}
 {{- range $mountName, $mountEntry := $mountData }} {{- /* range[1] */}}
+{{- if get $mountEntry "enabled" }} 
   - name: {{ printf "%s-extra" $mountName }}
     mountPath: {{ $mountEntry.path }} 
+{{- end }}
 {{- end }} {{- /* /range[1] */}}
 {{- end }} {{- /* /if[1] */}}
 {{- end }} {{- /* /range[0] */}}
