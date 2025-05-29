@@ -8,8 +8,8 @@
 {{- include "lib.error.noKey" (dict "ctx" . "key" "isInit") -}}
 name: {{ .name }}
 {{- if .isInit }}
-{{- if .restartPolicy }}
-restartPolicy: {{ .restartPolicy }}
+{{- if .data.restartPolicy }}
+restartPolicy: {{ .data.restartPolicy }}
 {{- end }}
 {{- end }}
 {{ include "lib.core.pod.container.securityContext" (dict "securityContext" .data.securityContext) }}
