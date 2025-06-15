@@ -17,7 +17,7 @@ restartPolicy: {{ .data.restartPolicy }}
 {{ include "lib.core.pod.container.args" (dict "args" .data.args) }}
 {{ include "lib.core.pod.container.livenessProbe" (dict "ctx" .ctx "probe" .data.livenessProbe) }}
 {{ include "lib.core.pod.container.readinessProbe" (dict "ctx" .ctx "probe" .data.readinessProbe) }}
-{{ include "lib.core.pod.container.startupProbe" (dict "ctx" .ctx "probe" .data.readinessProbe) }}
+{{ include "lib.core.pod.container.startupProbe" (dict "ctx" .ctx "probe" .data.startupProbe) }}
 {{ include "lib.core.pod.container.image" (dict "ctx" .ctx "image" .data.image) }}
 {{ include "lib.core.pod.container.envFrom" (dict "ctx" .ctx "envFrom" .data.envFrom) }}
 {{ include "lib.core.pod.container.volumeMounts" (dict "ctx" .ctx "mounts" .data.volumeMounts) }}
