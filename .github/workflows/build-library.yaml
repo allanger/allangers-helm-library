@@ -16,7 +16,7 @@ jobs:
         with:
           version: v4.2.4
       - name: Install helm unittest
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --verify=false
       - name: Run unit tests
         run: make unit
 
