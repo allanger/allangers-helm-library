@@ -20,6 +20,7 @@ restartPolicy: {{ .data.restartPolicy }}
 {{ include "lib.core.pod.container.startupProbe" (dict "ctx" .ctx "probe" .data.startupProbe) }}
 {{ include "lib.core.pod.container.image" (dict "ctx" .ctx "image" .data.image) }}
 {{ include "lib.core.pod.container.envFrom" (dict "ctx" .ctx "envFrom" .data.envFrom) }}
+{{ include "lib.core.pod.container.env" (dict "ctx" .ctx "env" .data.env) }}
 {{ include "lib.core.pod.container.volumeMounts" (dict "ctx" .ctx "mounts" .data.volumeMounts) }}
 {{ include "lib.core.pod.container.ports" (dict "ctx" .ctx "ports" .data.ports) }}
 {{- /*
@@ -157,6 +158,18 @@ envFrom:
 {{- end }} {{- /* /range[2] */}}
 
 {{- end -}} {{- /* /if[1] */ -}}
+{{- end -}} {{- /* /define[0] */ -}}
+
+{{/*
+  Set env directly
+*/}}
+{{- define "lib.core.pod.container.env" -}} {{- /* define[0] */ -}}
+{{- include "lib.error.noCtx" . -}}
+{{- include "lib.error.noKey" (dict "ctx" . "key" "env") -}}
+{{- with .env -}} {{- /* with[1] */ -}}
+env:
+  {{- . | toYaml | nindent 2 }}
+{{- end -}} {{- /* /with[1] */ -}}
 {{- end -}} {{- /* /define[0] */ -}}
 
 {{- define "lib.core.pod.container.volumeMounts" -}} {{- /* define[0] */ -}}
